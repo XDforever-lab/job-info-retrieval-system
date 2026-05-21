@@ -44,20 +44,42 @@ SECONDARY_DEFAULTS = {
 SALARY_MIN_REASONABLE = 1000
 SALARY_MAX_REASONABLE = 200000
 
-# URL / 广告正则
+# ── 脏数据正则（按来源模式分组）──
+
+# ① 马克数据系品牌词（所有变体）
+RE_MARKE = re.compile(
+    r'马\s*克\s*数\s*据\s*网|马\s*克\s*数\s*据|马\s*克\s*团\s*队|macrodatas?|macrodata',
+    re.IGNORECASE
+)
+
+# ② URL（含 CSV 引号泄漏）
 RE_URL = re.compile(
-    r'https?://[^\s，,。\n]*|www\.[^\s，,。\n]*|'
-    r'\b[a-zA-Z0-9._%+-]+\.(com|cn|org|net|gov|edu|io)[^\s，,。\n]*',
-    re.IGNORECASE
+    r'https?://[^\s，,。\n）\)]*|'
+    r'www\.[^\s，,。\n）\)]*|'
+    r'\b[a-zA-Z0-9._%+-]+\.(com|cn|org|net|gov|edu|io)[^\s，,。\n）\)]*',
 )
-RE_AD_WECHAT = re.compile(
-    r'(关注|微信|公众号|扫描|扫码|长按|识别).{0,15}(公众号|二维码|微信|马克数据|马克团队|macro|csv|好友)|'
-    r'马\s*克\s*数\s*据\s*网|马\s*克\s*团\s*队|'
-    r'macrodatas?',
-    re.IGNORECASE
+
+# ③ "该数据由<马克数据网>整理" / "数据由马克数据整理"
+RE_DATA_BY = re.compile(
+    r'(该)?数据由[^。，,\n]{0,30}?整理\s*[。.]?',
 )
-RE_SOURCE_MARK = re.compile(
-    r'(来源|数据来源|数据出自|平台)\s*[：:]\s*(马\s*克\s*数\s*据\s*网|马\s*克\s*团\s*队|平台\d?)',
+
+# ④ 来源标记: "（来源 马克数据网）" / "来源：百度搜索马克数据网" / "来源：www.xxx"
+RE_SOURCE = re.compile(
+    r'[（(]\s*来源\s*[：:\s]+\s*[^）)]*[）)]|'
+    r'来源\s*[：:\s]+\s*(百度|搜索|www\.)?\s*马\s*克\s*[^，。,\n]{0,20}|'
+    r'来源\s*[：:\s]+\s*www\.[^\s，。,\n]{0,30}',
+)
+
+# ⑤ "更多数据：搜索马克数据网" / "搜索马克数据网"
+RE_CROSS_REF = re.compile(
+    r'更多数据\s*[：:]\s*搜索\s*马\s*克\s*[^，。,\n]{0,20}|'
+    r'搜索\s*马\s*克\s*数据\s*网[^，。,\n]{0,10}',
+)
+
+# ⑥ 微信公众号/关注引流文案
+RE_WECHAT = re.compile(
+    r'(关注|微信|公众号|扫描|扫码|长按|识别).{0,20}(公众号|二维码|微信|好友|关注)',
     re.IGNORECASE
 )
 
@@ -101,40 +123,50 @@ def clean_text(text):
 
     t = text
 
-    # #31: 去除 URL
+    # ── 第一轮：去除完整句式的脏数据（可能跨多个字符）──
+
+    # #34a: "该数据由<马克数据网>整理" / "数据由马克数据整理"
+    t = RE_DATA_BY.sub("", t)
+
+    # #34b: 来源标记 "（来源 马克数据网）" / "来源：百度搜索..." / "来源：www..."
+    t = RE_SOURCE.sub("", t)
+
+    # #34c: "更多数据：搜索马克数据网" / "搜索马克数据网"
+    t = RE_CROSS_REF.sub("", t)
+
+    # ── 第二轮：去除品牌词和 URL ──
+
+    # #31: URL
     t = RE_URL.sub(" ", t)
 
-    # #32: 去除公众号 / 广告文案
-    t = RE_AD_WECHAT.sub(" ", t)
+    # #32a: 马克数据系品牌词
+    t = RE_MARKE.sub("", t)
 
-    # #34: 去除元数据标记
-    t = RE_SOURCE_MARK.sub(" ", t)
+    # #32b: 微信公众号引流文案
+    t = RE_WECHAT.sub("", t)
 
-    # #33: 去除不可见字符（\x00-\x08, \x0b-\x0c, \x0e-\x1f, \x7f-\x9f）
+    # ── 第三轮：字符级清理 ──
+
+    # #33: 不可见字符（\x00-\x08, \x0b-\x0c, \x0e-\x1f, \x7f-\x9f）
     t = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]', '', t)
-    t = t.replace('\xa0', ' ')      # 非断行空格 → 普通空格
-    t = t.replace('　', ' ')    # 全角空格 → 普通空格
+    t = t.replace('\xa0', ' ')
+    t = t.replace('　', ' ')
     t = t.replace('\r\n', '\n')
     t = t.replace('\r', '\n')
 
-    # #35: 多余空白统一为单空格，独立换行保留段落结构再压缩
+    # #35: 空白压缩
     t = re.sub(r'\t+', ' ', t)
     t = re.sub(r' {2,}', ' ', t)
     t = re.sub(r'\n{3,}', '\n\n', t)
     t = re.sub(r' *\n *', '\n', t)
-    t = t.strip()
 
-    # #36: 中英文标点统一
-    punct_map = {
-        "：": ":", "，": ",", "；": ";", "（": "(", "）": ")",
-        "“": '"', "”": '"', "‘": "'", "’": "'",
-        "！": "!", "？": "?", "～": "~", "％": "%",
-        "＠": "@", "＃": "#", "＄": "$", "＆": "&",
-        "＝": "=", "＋": "+", "－": "-", "＊": "*",
-        "／": "/", "＜": "<", "＞": ">",
-    }
-    # 中文环境下保留中文标点更自然，只清理明显干扰的
-    # 这里不做全量转换，注释保留以供选择
+    # #35b: 清洗产生的残留：孤立的 ".数据由" "来源："片段 再次扫描
+    #      （第二轮品牌词去除后可能留下残余标点）
+    t = re.sub(r'[。.]\s*数据由\s*[^，,.\n]{0,20}整理', '', t)
+    t = re.sub(r'[。.]\s*该数据由\s*[^，,.\n]{0,30}整理', '', t)
+    t = re.sub(r'[。.]\s*来源\s*[：:\s]+\s*[^，,.\n]{0,20}', '', t)
+
+    t = t.strip()
 
     return t
 
@@ -401,15 +433,22 @@ def validate_cleaned(df, salary_issues):
         else:
             col_report["状态"] = "已填充默认值" if col in SECONDARY_DEFAULTS else "—"
 
-        # URL/广告残留检测
+        # 脏数据残留检测
         if df[col].dtype == "object":
             sample = df[col].dropna().astype(str).str.cat(sep=" ")
-            urls = len(RE_URL.findall(sample))
-            ads = len(RE_AD_WECHAT.findall(sample))
-            col_report["残留URL数"] = urls
-            col_report["残留广告数"] = ads
-            if urls > 0 or ads > 0:
-                col_report["状态"] = "存在残留脏数据"
+            n_url = len(RE_URL.findall(sample))
+            n_marke = len(RE_MARKE.findall(sample))
+            n_data_by = len(RE_DATA_BY.findall(sample))
+            n_source = len(RE_SOURCE.findall(sample))
+            n_cross = len(RE_CROSS_REF.findall(sample))
+            n_wechat = len(RE_WECHAT.findall(sample))
+            total_dirty = n_url + n_marke + n_data_by + n_source + n_cross + n_wechat
+            col_report["残留URL"] = n_url
+            col_report["残留品牌词"] = n_marke
+            col_report["残留来源标记"] = n_source + n_data_by + n_cross
+            col_report["残留引流文案"] = n_wechat
+            if total_dirty > 0:
+                col_report["状态"] = f"存在 {total_dirty} 处残留脏数据"
                 failures += 1
 
         report[col] = col_report
@@ -487,8 +526,9 @@ def save_html_report(report, df):
             f"<tr><td>{icon}</td><td>{col}</td>"
             f"<td>{info.get('缺失数', '-')}</td>"
             f"<td>{info.get('缺失率', '-')}</td>"
-            f"<td>{info.get('残留URL数', '-')}</td>"
-            f"<td>{info.get('残留广告数', '-')}</td>"
+            f"<td>{info.get('残留URL', '-')}</td>"
+            f"<td>{info.get('残留品牌词', '-')}</td>"
+            f"<td>{info.get('残留来源标记', '-')}</td>"
             f"<td>{info.get('状态', '-')}</td></tr>\n"
         )
 
@@ -526,7 +566,7 @@ def save_html_report(report, df):
 
 <h2>字段级验证</h2>
 <table>
-  <tr><th></th><th>字段</th><th>缺失数</th><th>缺失率</th><th>残留URL</th><th>残留广告</th><th>状态</th></tr>
+  <tr><th></th><th>字段</th><th>缺失数</th><th>缺失率</th><th>残留URL</th><th>残留品牌词</th><th>残留来源标记</th><th>状态</th></tr>
   {validation_rows}
 </table>
 
