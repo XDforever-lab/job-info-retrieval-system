@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}上市公司招聘信息检索系统{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-logo">📊 上市公司招聘检索</a>
+      <div class="nav-links">
+        <a href="/" class="nav-link">搜索</a>
+        <a href="/industry" class="nav-link">行业浏览</a>
+        <a href="/stats" class="nav-link">数据统计</a>
+        <a href="/cluster" class="nav-link">聚类视图</a>
+        <a href="/about" class="nav-link">关于</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-container">
+      <span>上市公司招聘信息检索系统</span>
+      <span class="footer-sep">|</span>
+      <span>数据来源：上市公司招聘数据2026</span>
+      <span class="footer-sep">|</span>
+      <span>信息检索系统实验 · 期末大作业</span>
+    </div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
