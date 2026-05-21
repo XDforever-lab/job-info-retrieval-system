@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数据质量报告</title>
+<style>
+  body { font-family: "Microsoft YaHei", sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; color: #333; }
+  h1 { border-bottom: 2px solid #1a73e8; padding-bottom: 8px; }
+  h2 { margin-top: 32px; color: #1a73e8; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; font-size: 14px; }
+  th { background: #f5f5f5; }
+  .ok { color: #34a853; }
+  .warn { color: #ea4335; }
+</style>
+</head>
+<body>
+<h1>上市公司招聘数据 —— 质量报告</h1>
+<p>生成时间: 2026-05-21 13:24:01</p>
+
+<h2>清洗对比</h2>
+<table>
+  <tr><th>指标</th><th>值</th></tr>
+  <tr><td>行数变化</td><td>93,602 → 93,602 (删除 0 行)</td></tr>
+  <tr><td>字段数变化</td><td>14 → 14</td></tr>
+</table>
+
+<h2>字段级验证</h2>
+<table>
+  <tr><th></th><th>字段</th><th>缺失数</th><th>缺失率</th><th>残留URL</th><th>残留广告</th><th>状态</th></tr>
+  <tr><td>🟢</td><td>编号</td><td>0</td><td>0.00%</td><td>-</td><td>-</td><td>✓</td></tr>
+<tr><td>🟢</td><td>企业名称</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>股票简称</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>上市公司行业</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>招聘岗位</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>工作城市</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🔴</td><td>最低月薪</td><td>752</td><td>0.80%</td><td>-</td><td>-</td><td>已填充默认值</td></tr>
+<tr><td>🔴</td><td>最高月薪</td><td>752</td><td>0.80%</td><td>-</td><td>-</td><td>已填充默认值</td></tr>
+<tr><td>🟢</td><td>职位描述</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>学历要求</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>要求经验</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>招聘类别</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>招聘发布日期</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+<tr><td>🟢</td><td>招聘结束日期</td><td>0</td><td>0.00%</td><td>0</td><td>0</td><td>✓</td></tr>
+
+</table>
+
+<h2>薪资异常统计</h2>
+<table>
+  <tr><th>异常类型</th><th>数量</th></tr>
+  <tr><td>最低>最高</td><td>0</td></tr><tr><td>低于合理下限</td><td>0</td></tr><tr><td>高于合理上限</td><td>0</td></tr><tr><td>最低低于合理下限</td><td>24</td></tr><tr><td>最低高于合理上限</td><td>17</td></tr><tr><td>最高低于合理下限</td><td>21</td></tr><tr><td>最高高于合理上限</td><td>47</td></tr>
+</table>
+
+<h2>数据样本（前5条）</h2>
+<table>
+  <tr><th>编号</th><th>企业名称</th><th>股票简称</th><th>上市公司行业</th><th>招聘岗位</th><th>工作城市</th><th>最低月薪</th><th>最高月薪</th></tr>
+  <tr><td>1</td><td>平安银行股份有限公司</td><td>平安银行</td><td>货币金融服务</td><td>BK915R-会计核算管理岗</td><td>深圳</td><td>16667.0</td><td>25000.0</td></tr><tr><td>2</td><td>平安银行股份有限公司</td><td>平安银行</td><td>货币金融服务</td><td>BK91HT-预算及分析岗</td><td>深圳</td><td>16667.0</td><td>25000.0</td></tr><tr><td>3</td><td>平安银行股份有限公司</td><td>平安银行</td><td>货币金融服务</td><td>BK915B-税务管理岗</td><td>深圳</td><td>16667.0</td><td>25000.0</td></tr><tr><td>4</td><td>平安银行股份有限公司</td><td>平安银行</td><td>货币金融服务</td><td>BK91GI-薪酬管理岗</td><td>深圳</td><td>16667.0</td><td>25000.0</td></tr><tr><td>5</td><td>平安银行股份有限公司</td><td>平安银行</td><td>货币金融服务</td><td>BK910X-净息差管理岗</td><td>深圳</td><td>16667.0</td><td>25000.0</td></tr>
+</table>
+
+<p style="margin-top:24px;color:#888;font-size:12px;">
+  清洗流程: URL/广告去除 → 空白字符清理 → 缺失值处理 → 薪资异常修正 →
+  学历/经验/城市标准化 → 行业名检查
+</p>
+</body>
+</html>

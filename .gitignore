@@ -2,6 +2,7 @@
 code/data/*.csv
 code/data/*.tsv
 code/data/*.xlsx
+code/output/*.csv
 
 # Python 缓存
 __pycache__/
