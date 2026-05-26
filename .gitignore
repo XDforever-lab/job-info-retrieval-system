@@ -7,6 +7,9 @@ code/output/*.csv
 code/output/2_preprocess/*.csv
 code/output/3_cleaner/*.csv
 
+code/output/2_preprocess/上市公司招聘数据_processed.csv
+code/output/3_cleaner/上市公司招聘数据_cleaned.csv
+
 # Python 缓存
 __pycache__/
 *.py[cod]
