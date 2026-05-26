@@ -55,15 +55,10 @@ def main():
     print(f"  有效职位描述: {len(descs)} 条")
 
     # ── 生成纯原文 txt ──
-    # 去掉 jieba 分词符 "/"，还原为纯文本
+    # 直接去掉所有 jieba 分词符 "/" + 多余空白，还原纯文本
     raw_lines = []
     for d in descs:
-        # 把 "/" 分隔符去掉，还原原文
-        # 注意：数字/英文 中的 "/" 不删（如 "15k/月"）
-        raw = re.sub(r'(?<=[一-鿿，。；：！？、""''）\)】\]])\s*/\s*(?=[一-鿿])', '', d)
-        raw = re.sub(r'(?<=[一-鿿])\s*/\s*(?=[一-鿿，。；：！？、])', '', raw)
-        raw = re.sub(r'(?<=[\x00-\x7f])\s*/\s*(?=[一-鿿])', '', raw)
-        raw = re.sub(r'(?<=[一-鿿])\s*/\s*(?=[\x00-\x7f])', '', raw)
+        raw = d.replace("/", "")
         raw = re.sub(r' {2,}', ' ', raw)
         raw = raw.strip()
         raw_lines.append(raw)
