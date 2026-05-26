@@ -3,6 +3,9 @@ code/data/*.csv
 code/data/*.tsv
 code/data/*.xlsx
 code/output/*.csv
+code/output/*.csv
+code/output/2_preprocess/*.csv
+code/output/3_cleaner/*.csv
 
 # Python 缓存
 __pycache__/
