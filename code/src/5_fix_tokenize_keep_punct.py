@@ -2,9 +2,13 @@
 import csv
 import jieba
 
-INPUT_SAMPLED = r'code\output\分词采样结果_200条.csv'
-INPUT_CORPUS = r'code\output\上市公司招聘数据_cleaned.csv'
-OUTPUT_CSV = r'code\output\分词采样结果_200条.csv'
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import CLEANED_CSV, SAMPLED_CSV
+
+INPUT_SAMPLED = SAMPLED_CSV
+INPUT_CORPUS = CLEANED_CSV
+OUTPUT_CSV = SAMPLED_CSV
 
 # 自定义词典（与原脚本保持一致）
 custom_words = [

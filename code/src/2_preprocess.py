@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import DATA_DIR, OUTPUT_DIR
+from config import DATA_DIR, PROCESSED_CSV, PREPROCESS_REPORT, DIR_2_PREPROC
 
 # ── 配置 ────────────────────────────────────────
 
@@ -288,8 +288,8 @@ def main():
     df = normalize_columns(df)
 
     # 保存
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    out_csv = os.path.join(OUTPUT_DIR, "上市公司招聘数据_processed.csv")
+    os.makedirs(os.path.dirname(PROCESSED_CSV), exist_ok=True)
+    out_csv = PROCESSED_CSV
     df.to_csv(out_csv, index=False, encoding="utf-8-sig")
     print(f"\n  [保存] {out_csv}")
     print(f"  [编码] UTF-8 with BOM (Excel 直接打开)")
@@ -304,7 +304,7 @@ def main():
         "日期偏移天数": DATE_OFFSET_DAYS,
         "日期验证": date_issues,
     }
-    report_path = os.path.join(OUTPUT_DIR, "preprocess_report.json")
+    report_path = PREPROCESS_REPORT
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2, default=str)
     print(f"  [报告] {report_path}")

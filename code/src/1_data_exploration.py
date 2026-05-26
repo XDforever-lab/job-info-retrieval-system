@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import DATA_DIR, OUTPUT_DIR
+from config import DATA_DIR, STATS_SUMMARY
 
 # ── 0. 数据加载 ──────────────────────────────────
 
@@ -396,8 +396,8 @@ def main():
     report = convert(results)
 
     # 保存 JSON
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    output_path = os.path.join(OUTPUT_DIR, "stats_summary.json")
+    os.makedirs(os.path.dirname(STATS_SUMMARY), exist_ok=True)
+    output_path = STATS_SUMMARY
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"[JSON 已保存] {output_path}")

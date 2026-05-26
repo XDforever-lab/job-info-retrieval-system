@@ -24,14 +24,14 @@ import re
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import OUTPUT_DIR
+from config import SAMPLED_CSV, SEG_RAW_TXT, SEG_JIEBA_TXT, SEG_META_JSON
 
 # ── 配置 ────────────────────────────────────────
 
-INPUT_CSV = os.path.join(OUTPUT_DIR, "分词采样结果_200条.csv")
-OUTPUT_RAW = os.path.join(OUTPUT_DIR, "seg_200_raw.txt")
-OUTPUT_JIEBA = os.path.join(OUTPUT_DIR, "seg_200_jieba.txt")
-OUTPUT_META = os.path.join(OUTPUT_DIR, "seg_200_meta.json")
+INPUT_CSV = SAMPLED_CSV
+OUTPUT_RAW = SEG_RAW_TXT
+OUTPUT_JIEBA = SEG_JIEBA_TXT
+OUTPUT_META = SEG_META_JSON
 
 
 # ── 主逻辑 ──────────────────────────────────────
@@ -63,7 +63,7 @@ def main():
         raw = raw.strip()
         raw_lines.append(raw)
 
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(SEG_RAW_TXT), exist_ok=True)
     with open(OUTPUT_RAW, "w", encoding="utf-8") as f:
         f.write("\n".join(raw_lines))
     print(f"\n  #53 [保存] 纯原文 txt → {OUTPUT_RAW}")

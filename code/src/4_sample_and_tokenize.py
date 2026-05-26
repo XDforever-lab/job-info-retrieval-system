@@ -6,9 +6,13 @@ from datetime import datetime
 
 random.seed(42)
 
-INPUT_FILE = r'd:\大三下学期\信息检索系统实验\小组作业\招聘信息检索系统\recruit\code\output\上市公司招聘数据_cleaned.csv'
-OUTPUT_CSV = r'd:\大三下学期\信息检索系统实验\小组作业\招聘信息检索系统\recruit\code\output\分词采样结果_200条.csv'
-OUTPUT_DOC = r'd:\大三下学期\信息检索系统实验\小组作业\招聘信息检索系统\recruit\code\output\分词采样过程记录.txt'
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import CLEANED_CSV, SAMPLED_CSV, DIR_4_SAMPLE
+
+INPUT_FILE = CLEANED_CSV
+OUTPUT_CSV = SAMPLED_CSV
+OUTPUT_DOC = os.path.join(DIR_4_SAMPLE, "分词采样过程记录.txt")
 
 TOTAL_SAMPLES = 200
 

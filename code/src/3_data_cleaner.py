@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import DATA_DIR, OUTPUT_DIR
+from config import DATA_DIR, CLEANED_CSV, CLEANER_REPORT, QUALITY_HTML, PROCESSED_CSV
 
 # ── 配置常量 ────────────────────────────────────
 
@@ -492,15 +492,15 @@ def generate_comparison_report(before_df, after_df, before_shape, after_shape):
 
 def save_cleaned_data(df, report):
     """保存清洗后的数据和完整清洗报告"""
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(CLEANED_CSV), exist_ok=True)
 
     # CSV
-    csv_path = os.path.join(OUTPUT_DIR, "上市公司招聘数据_cleaned.csv")
+    csv_path = CLEANED_CSV
     df.to_csv(csv_path, index=False, encoding="utf-8-sig")
     print(f"\n  #50 [保存] {csv_path} ({len(df):,} 行)")
 
     # JSON 报告
-    report_path = os.path.join(OUTPUT_DIR, "cleaner_report.json")
+    report_path = CLEANER_REPORT
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2, default=str)
     print(f"  [报告] {report_path}")
@@ -510,7 +510,7 @@ def save_cleaned_data(df, report):
 
 def save_html_report(report, df):
     """生成 HTML 格式的数据质量报告预览页"""
-    html_path = os.path.join(OUTPUT_DIR, "数据质量报告.html")
+    html_path = QUALITY_HTML
 
     def row_status_icon(status):
         if "✓" in str(status): return "🟢"
@@ -605,7 +605,7 @@ def main():
     print("=" * 60)
 
     # 加载预处理后的数据
-    proc_csv = os.path.join(OUTPUT_DIR, "上市公司招聘数据_processed.csv")
+    proc_csv = PROCESSED_CSV
     if not os.path.exists(proc_csv):
         print("  [提示] 预处理文件不存在，从原始数据开始清洗")
         proc_csv = os.path.join(DATA_DIR, "上市公司招聘数据2026.csv")
