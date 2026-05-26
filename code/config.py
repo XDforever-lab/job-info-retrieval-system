@@ -25,6 +25,9 @@ DIR_3_CLEANER = os.path.join(OUTPUT_DIR, '3_cleaner')
 DIR_4_SAMPLE = os.path.join(OUTPUT_DIR, '4_sample')
 DIR_6_PREP_SEG = os.path.join(OUTPUT_DIR, '6_prep_seg')
 DIR_7_SEG_EVAL = os.path.join(OUTPUT_DIR, '7_seg_eval')
+DIR_8_SEG = os.path.join(OUTPUT_DIR, '8_full_seg')
+DIR_9_NGRAM = os.path.join(OUTPUT_DIR, '9_ngram')
+DIR_10_KW = os.path.join(OUTPUT_DIR, '10_keywords')
 
 # 各脚本输出文件路径
 # 1_exploration
@@ -57,7 +60,7 @@ EVAL_SUMMARY = os.path.join(DIR_7_SEG_EVAL, 'seg_eval_summary.txt')
 # 通用输出文件
 STOPWORDS_FILE = os.path.join(OUTPUT_DIR, 'stopwords.txt')
 NGRAM_REPORT = os.path.join(OUTPUT_DIR, 'ngram_report.json')
-SEGMENTED_CSV = os.path.join(OUTPUT_DIR, '上市公司招聘数据_segmented.csv')
+SEGMENTED_CSV = os.path.join(DIR_8_SEG, '上市公司招聘数据_segmented.csv')
 CLUSTER_VIS_DATA = os.path.join(OUTPUT_DIR, 'cluster_vis.json')
 EVAL_REPORT = os.path.join(OUTPUT_DIR, 'eval_report.json')
 
