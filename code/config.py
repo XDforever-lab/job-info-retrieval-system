@@ -28,6 +28,7 @@ DIR_7_SEG_EVAL = os.path.join(OUTPUT_DIR, '7_seg_eval')
 DIR_8_SEG = os.path.join(OUTPUT_DIR, '8_full_seg')
 DIR_9_NGRAM = os.path.join(OUTPUT_DIR, '9_ngram')
 DIR_10_KW = os.path.join(OUTPUT_DIR, '10_keywords')
+DIR_12_CLASSIFY = os.path.join(OUTPUT_DIR, '12_classify')
 
 # 各脚本输出文件路径
 # 1_exploration
