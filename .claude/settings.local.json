@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/d/SOFTWARE/miniconda3/envs/my_project/python.exe *)"
+    ]
+  }
+}

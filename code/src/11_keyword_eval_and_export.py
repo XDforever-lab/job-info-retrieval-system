@@ -62,22 +62,24 @@ AGG_CAT = os.path.join(DIR_10_KW, "agg_category.json")
 # ══════════════════════════════════════════════════
 
 def parse_gold_standard(filepath):
-    """解析人工标注的金标准文件 → {原始doc_id: set(关键词)}"""
+    """解析人工标注的金标准文件 → {原始doc_id: set(关键词)}
+       如果用户已标注则直接读取，否则返回空"""
     with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
     gold = {}
-    # 匹配每个文档块
     pattern = re.compile(
         r'### 文档 \d+ \(原始ID: (\d+)\).*?金标准关键词: (.+?)(?:\n|$)', re.DOTALL
     )
     for m in pattern.finditer(content):
         doc_id = int(m.group(1))
         kws = m.group(2).strip()
-        if kws:
+        # 只保留用户已填写关键词的行（跳过空白行）
+        if kws and kws != '___' and not kws.startswith('_'):
             gold[doc_id] = set(w.strip() for w in kws.split(",") if w.strip())
-        else:
-            gold[doc_id] = set()
+
+    if not gold:
+        print("  [!] 金标准中未发现已标注关键词，请先完成 gold_100_for_annotation.txt 标注")
     return gold
 
 

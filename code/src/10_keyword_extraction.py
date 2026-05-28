@@ -68,28 +68,36 @@ def load_stopwords():
 
 
 def is_valid_token(w):
-    """过滤 CRF 分词碎片：含标点、纯数字、单字虚词、明显切碎片段"""
+    """过滤 CRF 分词碎片：含标点、纯数字、单字、明显切碎片段"""
     if not w or len(w) == 0:
         return False
-    # ① 含标点符号的碎片：; 3、  : 1、  (J10301)  等
+    # ① 含标点符号的碎片
     if re.search(r'[，。；：、（）【】"".！？…—\-;:,.!?()（）\[\]{}《》#@&*+/=]', w):
         return False
     # ② 纯数字 / 小数 / 百分比
     if re.match(r'^\d+(\.\d+)?%?$', w):
         return False
-    # ③ 纯英文单字母
-    if re.match(r'^[a-zA-Z]$', w):
+    # ③ 纯英文单字母 / 纯英文短串
+    if re.match(r'^[a-zA-Z]{1,2}$', w):
         return False
-    # ④ 单字且非中文（数字/字母残余）
-    if len(w) == 1 and not re.match(r'^[一-龥]$', w):
+    # ④ 单字词 — 关键词无意义
+    if len(w) <= 1:
         return False
-    # ⑤ 明显 CRF 碎片：常见虚词被粘到别的字上 如 "线的" "理或" "司投"
-    FRAGMENT_SUFFIX = {'的', '了', '是', '在', '和', '与', '或', '及', '将', '相', '而', '所'}
-    if len(w) == 2 and w[1] in FRAGMENT_SUFFIX and w not in {'目的', '的确', '的是'}:
-        return False
-    FRAGMENT_PREFIX = {'的', '了', '是', '在', '和', '与', '或', '及'}
-    if len(w) == 2 and w[0] in FRAGMENT_PREFIX and len(w) == 2 and w not in {'的确'}:
-        return False
+    # ⑤ CRF 碎片库 (2字词含常见虚词/介词/量词/方位字)
+    FRAGMENT_CHARS = {'的', '了', '是', '在', '和', '与', '或', '及', '将', '相',
+                      '而', '所', '对', '能', '被', '把', '从', '以', '可', '会',
+                      '要', '就', '也', '都', '很', '到', '出', '过', '着', '上',
+                      '下', '中', '里', '外', '前', '后', '时', '为', '向', '于',
+                      '不', '没', '有', '来', '去', '这', '那', '个', '各', '每',
+                      '司', '应', '作', '用', '如', '因', '其', '已', '由', '但',
+                      '只', '还', '又', '之', '此', '者', '内', '等', '第', '头'}
+    if len(w) == 2 and (w[0] in FRAGMENT_CHARS or w[1] in FRAGMENT_CHARS):
+        # 白名单：真正的2字专业词
+        WHITELIST = {'目的', '出口', '进口', '上市', '下水', '中风', '前后', '上下',
+                     '中外', '以上', '以下', '以前', '以后', '将来', '过去', '出来',
+                     '进去', '上来', '下来', '出去', '上来', '回来', '过来', '起来'}
+        if w not in WHITELIST:
+            return False
     return True
 
 

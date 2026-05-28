@@ -29,6 +29,9 @@ DIR_8_SEG = os.path.join(OUTPUT_DIR, '8_full_seg')
 DIR_9_NGRAM = os.path.join(OUTPUT_DIR, '9_ngram')
 DIR_10_KW = os.path.join(OUTPUT_DIR, '10_keywords')
 DIR_12_CLASSIFY = os.path.join(OUTPUT_DIR, '12_classify')
+DIR_13_CLASSIFY = os.path.join(OUTPUT_DIR, '13_classify')
+DIR_15_CLUSTER = os.path.join(OUTPUT_DIR, '15_cluster')
+DIR_16_SIMILAR = os.path.join(OUTPUT_DIR, '16_similar')
 
 # 各脚本输出文件路径
 # 1_exploration
