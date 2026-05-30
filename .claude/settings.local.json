@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(/d/SOFTWARE/miniconda3/envs/my_project/python.exe *)"
+      "Bash(/d/SOFTWARE/miniconda3/envs/my_project/python.exe *)",
+      "Bash(grep -v \"CSS\\\\|参考\\\\|注释\\\\|规则\\\\|//\")"
     ]
   }
 }
