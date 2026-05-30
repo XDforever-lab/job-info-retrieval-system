@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(/d/SOFTWARE/miniconda3/envs/my_project/python.exe *)",
-      "Bash(grep -v \"CSS\\\\|参考\\\\|注释\\\\|规则\\\\|//\")"
+      "Bash(grep -v \"CSS\\\\|参考\\\\|注释\\\\|规则\\\\|//\")",
+      "Bash(sed -i 's/{Python, AI/{ {Python, AI/g; s/, 架构}/, 架构} }/g' \"/c/Users/ZhangQichen/Desktop/recruit/code/src/build_final_ppt.py\")",
+      "Bash(sed -i 's/{财务, 税务/{ {财务, 税务/g; s/, 报表}/, 报表} }/g' \"/c/Users/ZhangQichen/Desktop/recruit/code/src/build_final_ppt.py\")"
     ]
   }
 }
