@@ -148,8 +148,24 @@ add('<section class="slide dark"><h2>07 · 范围层 (2/3)：智能服务 — �
 + IMG(clu) +
 '</div></div></section>')
 
+
+# New P8 - F8/F9/F10
+add("""<section class="slide dark"><h2>08 · 范围层 (3/4)：F8-F10 智能展示功能</h2><div class="grid3">
+<div class="card2"><div class="mono" style="font-size:24px;color:#d2991d">F8 · 相似岗位推荐</div><h3 style="margin-top:1vh">TF-IDF 余弦相似度</h3>
+<p style="font-size:14px"><span class="n">做什么：</span>详情页底部展示与该岗位最相似的 Top-5 其他岗位。本质即 VSM 检索——对当前职位 TF-IDF 向量与全量 5,000 文档矩阵做批量余弦计算，返回相似度最高的 5 个。相似度范围 0.27~0.34（短文本正常）。</p>
+<p style="font-size:14px;margin-top:1vh"><span class="n">怎么做：</span>Step 16: 构建全量 5,000×32,365 TF-IDF 稀疏矩阵 → models/tfidf_matrix.npz。batch_cosine_sim(job_id, top_k=5) 函数逐文档计算 cos 并排除自身 → Top-5。结果保存为 similar_jobs.json，Web 启动时加载。</p>
+<p style="font-size:14px;margin-top:1vh"><span class="n">关联课程：</span>第2章(向量空间模型+余弦相似度) + 第3章(倒排文档检索)</p></div>
+<div class="card2"><div class="mono" style="font-size:24px;color:#d2991d">F9 · 数据统计仪表盘</div><h3 style="margin-top:1vh">多维度数据可视化</h3>
+<p style="font-size:14px"><span class="n">做什么：</span>提供宏观数据视角：行业招聘数量排行(Top-15)、城市招聘热度(Top-10)、薪资分布直方图(5k区间)、学历要求饼图、经验要求分布图。服务分析师张工(Persona 3)的行业趋势分析需求。</p>
+<p style="font-size:14px;margin-top:1vh"><span class="n">怎么做：</span>Step 1: 数据探索已生成 stats_summary.json。Step 11: 关键词按行业/城市/类别聚合为 agg_*.json。前端用 Matplotlib 预渲染 + 前端 ECharts 交互渲染。数据源自 cleaned.csv 的结构化字段。</p>
+<p style="font-size:14px;margin-top:1vh"><span class="n">关联课程：</span>信息的展示 · 实验一(宏观统计)</p></div>
+<div class="card2"><div class="mono" style="font-size:24px;color:#d2991d">F10 · 分词效果对比</div><h3 style="margin-top:1vh">7种分词器评测弹窗</h3>
+<p style="font-size:14px"><span class="n">做什么：</span>职位详情页提供"查看分词效果"按钮，点击弹出模态框，展示同一职位描述的 7 种分词方案（FMM/BMM/BiMM/MinSeg/HMM/Ngram/CRF）切分结果对比，差异位置浅红标注。底部附 P/R/F1 评测表。</p>
+<p style="font-size:14px;margin-top:1vh"><span class="n">怎么做：</span>Step 7: 200条人工金标准 + BIES字符级 + 集合元素化双评测。7种分词器结果保存至 seg_result_*.txt，Web 加载后按 / 拆分为词列表，diff 算法标注差异位置渲染。</p>
+<p style="font-size:14px;margin-top:1vh"><span class="n">关联课程：</span>实验二(分词规范+人工精标) + 实验三(自动分词算法实现与迭代优化)</p></div>
+</div></section>""")
 # P8 - Results
-add('''<section class="slide dark"><h2>08 · 范围层 (3/3)：核心实验数据汇总</h2><div class="grid2"><div>
+add('''<section class="slide dark"><h2>08 · 范围层 (4/4)：核心实验数据汇总</h2><div class="grid2"><div>
 <h3 class="accent" style="margin-bottom:1.6vh">分词评测 (200条金标准, 7种模型)</h3>
 <div class="table" style="grid-template-columns:1fr 1fr 1fr 1fr">
 <div class="th">模型</div><div class="th">P(%)</div><div class="th">R(%)</div><div class="th">F1(%)</div>
@@ -186,7 +202,7 @@ add('''<section class="slide dark"><h2>08 · 范围层 (3/3)：核心实验数�
 </div></div></section>''')
 
 # P9 - Structure
-add('''<section class="slide dark"><h2>09 · 结构层：页面架构与信息架构</h2><div class="grid2"><div><h3 class="accent">7 个核心页面</h3>
+add('''<section class="slide dark"><h2>10 · 结构层：页面架构与信息架构</h2><div class="grid2"><div><h3 class="accent">7 个核心页面</h3>
 <div class="card" style="margin-bottom:1vh"><span class="n">首页 · 搜索门户</span> — 搜索框 + 城市/行业/学历/薪资快捷筛选 + 9大行业标签卡片 + 最新招聘滚动列表</div>
 <div class="card" style="margin-bottom:1vh"><span class="n">检索结果页</span> — 左侧筛选面板(行业/城市多选 + 学历/经验/薪资滑块/日期) + 右侧结果列表(职位卡片: 岗位名+企业+股票简称+月薪+学历+经验+描述高亮) + 排序选择器 + 分页器</div>
 <div class="card" style="margin-bottom:1vh"><span class="n">职位详情页</span> — 基本信息区 + 完整描述(高亮) + Top-15关键词标签(可点击搜索) + NB分类预测(原始vs预测+置信度) + 相似职位推荐(5张卡片) + 分词效果对比按钮(弹出7种分词器模态框)</div>
@@ -204,7 +220,7 @@ add('''<section class="slide dark"><h2>09 · 结构层：页面架构与信息�
 </div></div></section>''')
 
 # P10 - Framework + Surface
-add('''<section class="slide dark"><h2>10 · 框架层与表现层</h2>
+add('''<section class="slide dark"><h2>11 · 框架层与表现层</h2>
 <div class="grid4"><div class="card"><h3 class="accent">线框设计</h3><p style="font-size:14px">首页：搜索框居中，筛选条件横向排列，行业标签卡片网格，最新招聘列表。</p><p style="font-size:14px;margin-top:1vh">结果页：左侧 20% 筛选面板，右侧 80% 结果列表。详情页：上下分区，信息区→描述区→标签区→推荐区。</p></div>
 <div class="card"><h3 class="accent">导航与信息设计</h3><p style="font-size:14px">顶部固定导航栏：Logo + [搜索] [行业浏览] [数据统计] [聚类视图] [关于]。</p><p style="font-size:14px;margin-top:1vh">职位卡片统一模板。统一分页器、排序选择器、空状态/加载状态提示组件。</p></div>
 <div class="card"><h3 class="accent">视觉风格</h3><p style="font-size:14px">配色：主色 <span style="color:#1a73e8">#1a73e8</span> 蓝 · 辅色 <span style="color:#34a853">#34a853</span> 绿 · 强调 <span style="color:#ea4335">#ea4335</span> 红</p><p style="font-size:14px;margin-top:1vh">字体：微软雅黑 · 标题 24px · 正文 14px · 辅助 12px。背景 #f8f9fa · 卡片 #fff</p></div>
