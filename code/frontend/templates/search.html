@@ -69,15 +69,21 @@
       </div>
 
       <div class="filter-section">
-        <label>最低月薪</label>
-        <input type="number" name="salary_min" class="filter-input" value="{{ current_filters.salary_min }}"
-               placeholder="如 10000" form="filter-form" step="1000">
-      </div>
-
-      <div class="filter-section">
-        <label>最高月薪</label>
-        <input type="number" name="salary_max" class="filter-input" value="{{ current_filters.salary_max }}"
-               placeholder="如 50000" form="filter-form" step="1000">
+        <label>月薪范围</label>
+        <div class="salary-range" data-min="{{ current_filters.salary_min or 0 }}" data-max="{{ current_filters.salary_max or 100000 }}">
+          <div class="range-slider">
+            <input type="range" class="range-min" min="0" max="100000" step="5000" value="{{ current_filters.salary_min or 0 }}">
+            <input type="range" class="range-max" min="0" max="100000" step="5000" value="{{ current_filters.salary_max or 100000 }}">
+            <div class="range-track"></div>
+          </div>
+          <div class="range-display">
+            <span class="range-val-min">{{ (current_filters.salary_min|int // 1000) if current_filters.salary_min else 0 }}k</span>
+            <span class="range-sep">&mdash;</span>
+            <span class="range-val-max">{{ (current_filters.salary_max|int // 1000) if current_filters.salary_max else '100k+' }}</span>
+          </div>
+          <input type="hidden" name="salary_min" form="filter-form" class="salary-min-hidden" value="{{ current_filters.salary_min or '' }}">
+          <input type="hidden" name="salary_max" form="filter-form" class="salary-max-hidden" value="{{ current_filters.salary_max or '' }}">
+        </div>
       </div>
 
       <form id="filter-form" action="/search" method="get">
@@ -150,4 +156,56 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  var container = document.querySelector('.salary-range');
+  if (!container) return;
+  var minInput = container.querySelector('.range-min');
+  var maxInput = container.querySelector('.range-max');
+  var minHidden = container.querySelector('.salary-min-hidden');
+  var maxHidden = container.querySelector('.salary-max-hidden');
+  var minLabel = container.querySelector('.range-val-min');
+  var maxLabel = container.querySelector('.range-val-max');
+  var track = container.querySelector('.range-track');
+  var fill = document.createElement('div');
+  fill.className = 'range-fill';
+  track.appendChild(fill);
+
+  var minVal = parseInt(minInput.value) || 0;
+  var maxVal = parseInt(maxInput.value) || 100000;
+  var range = 100000;
+
+  function fmt(v) { return v >= 100000 ? '100k+' : Math.round(v / 1000) + 'k'; }
+
+  function updateFill() {
+    var left = (minVal / range) * 100;
+    var right = 100 - (maxVal / range) * 100;
+    fill.style.left = left + '%';
+    fill.style.right = right + '%';
+  }
+
+  function sync() {
+    minVal = parseInt(minInput.value) || 0;
+    maxVal = parseInt(maxInput.value) || 100000;
+    if (minVal > maxVal - 5000) {
+      if (document.activeElement === minInput) minVal = Math.max(0, maxVal - 5000);
+      else maxVal = Math.min(100000, minVal + 5000);
+      minInput.value = minVal;
+      maxInput.value = maxVal;
+    }
+    minHidden.value = minVal > 0 ? minVal : '';
+    maxHidden.value = maxVal < 100000 ? maxVal : '';
+    minLabel.textContent = fmt(minVal);
+    maxLabel.textContent = fmt(maxVal);
+    updateFill();
+  }
+
+  minInput.addEventListener('input', sync);
+  maxInput.addEventListener('input', sync);
+  sync();
+})();
+</script>
 {% endblock %}

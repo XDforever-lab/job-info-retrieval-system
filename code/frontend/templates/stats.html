@@ -50,7 +50,7 @@ echarts.init(document.getElementById('chart-industry')).setOption({
   tooltip: {}, grid: { left: 120, right: 20, top: 10, bottom: 30 },
   xAxis: { type: 'value' },
   yAxis: { type: 'category', data: indNames.reverse(), axisLabel: { fontSize: 11 } },
-  series: [{ type: 'bar', data: indCounts.reverse(), itemStyle: { color: '#1a73e8' } }]
+  series: [{ type: 'bar', data: indCounts.reverse(), itemStyle: { color: '#4a7c96' } }]
 });
 
 // 城市柱状图
@@ -58,7 +58,7 @@ echarts.init(document.getElementById('chart-city')).setOption({
   tooltip: {}, grid: { left: 60, right: 20, top: 10, bottom: 30 },
   xAxis: { type: 'category', data: cityNames, axisLabel: { rotate: 30, fontSize: 10 } },
   yAxis: { type: 'value' },
-  series: [{ type: 'bar', data: cityCounts, itemStyle: { color: '#34a853' } }]
+  series: [{ type: 'bar', data: cityCounts, itemStyle: { color: '#b8956a' } }]
 });
 
 // 薪资直方图
@@ -68,7 +68,7 @@ echarts.init(document.getElementById('chart-salary')).setOption({
   tooltip: {}, grid: { left: 50, right: 20, top: 10, bottom: 40 },
   xAxis: { type: 'category', data: bins, axisLabel: { fontSize: 10 } },
   yAxis: { type: 'value' },
-  series: [{ type: 'bar', data: binVals, itemStyle: { color: '#1a73e8' } }]
+  series: [{ type: 'bar', data: binVals, itemStyle: { color: '#c17a5c' } }]
 });
 
 // 学历饼图
@@ -76,11 +76,14 @@ var eduPie = [];
 for (var k in eduData) { eduPie.push({name: k, value: eduData[k]}); }
 echarts.init(document.getElementById('chart-edu')).setOption({
   tooltip: { trigger: 'item' },
-  legend: { orient: 'vertical', right: 10, top: 'center' },
+  legend: { orient: 'horizontal', bottom: 0, left: 'center', itemGap: 16, textStyle: { fontSize: 11 } },
   series: [{
-    type: 'pie', radius: ['30%', '65%'],
+    type: 'pie', radius: ['35%', '65%'], center: ['50%', '43%'],
     data: eduPie,
-    emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.2)' } }
+    label: { show: false },
+    itemStyle: { borderColor: '#fff', borderWidth: 2 },
+    color: ['#4a7c96', '#b8956a', '#c17a5c', '#7a9b6e', '#8b6b9e', '#c4a654'],
+    emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.08)' } }
   }]
 });
 </script>
