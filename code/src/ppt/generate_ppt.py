@@ -1,7 +1,7 @@
 """生成 PPT HTML —— 严格使用 Swiss 模板定义的 CSS 类名"""
 import json, os, sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import *  # noqa: F403
 
 TEMPLATE = os.path.join(os.path.expanduser("~"), ".claude/skills/guizang-ppt-skill/assets/template-swiss.html")

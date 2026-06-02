@@ -48,7 +48,7 @@ import numpy as np
 import pycrfsuite
 import sklearn_crfsuite
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import (OUTPUT_DIR, DATA_DIR, DIR_6_PREP_SEG, DIR_7_SEG_EVAL,
                      SEG_RAW_TXT, GOLD_STANDARD, SAMPLED_CSV,
                      DICT_FILE, EVAL_JSON, EVAL_PNG, EVAL_SUMMARY)

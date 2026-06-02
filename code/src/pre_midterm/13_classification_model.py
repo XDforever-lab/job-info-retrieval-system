@@ -30,7 +30,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import SEGMENTED_CSV, DIR_12_CLASSIFY, DIR_13_CLASSIFY, CLEANED_CSV
 
 plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei"]

@@ -3,7 +3,7 @@ import csv
 import jieba
 
 import os, sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import CLEANED_CSV, SAMPLED_CSV
 
 INPUT_SAMPLED = SAMPLED_CSV

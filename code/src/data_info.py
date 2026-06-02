@@ -3,7 +3,7 @@
 import sys
 sys.path.insert(0, '..')
 
-from src.data_loader import load_raw_data, get_data_summary
+from src.common.data_loader import load_raw_data, get_data_summary
 
 
 def print_separator(title):

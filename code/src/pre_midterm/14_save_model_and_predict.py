@@ -20,7 +20,7 @@ from collections import defaultdict
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import SEGMENTED_CSV, DIR_12_CLASSIFY, DIR_13_CLASSIFY, MODEL_DIR
 
 ANNO_FILE = os.path.join(DIR_12_CLASSIFY, "annotation_9cats.txt")

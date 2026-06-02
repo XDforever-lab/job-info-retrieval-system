@@ -1,28 +1,23 @@
 {% extends "base.html" %}
-
 {% block title %}首页 - 上市公司招聘信息检索系统{% endblock %}
 
 {% block content %}
 <div class="search-hero">
   <h1 class="search-title">上市公司招聘信息检索</h1>
-  <p class="search-subtitle">覆盖 8,796 家中国 A 股上市公司 · 81 个行业 · 93,602 条招聘记录</p>
+  <p class="search-subtitle">覆盖 {{ industries|length }} 大行业 · {{ '{:,}'.format(5000) }} 条招聘记录 · A 股上市公司</p>
 
-  <!-- 搜索框 -->
   <form action="/search" method="get" class="search-form">
     <div class="search-input-row">
       <input type="text" name="q" class="search-input"
-             placeholder="输入岗位、技能或公司关键词搜索..." autofocus>
-      <button type="submit" class="search-btn">🔍 搜索</button>
+             placeholder="输入岗位、技能或公司关键词搜索..." autofocus
+             value="">
+      <button type="submit" class="search-btn">搜索</button>
     </div>
-  </form>
-
-  <!-- 快捷筛选 -->
-  <div class="quick-filters">
-    <form action="/search" method="get" class="filter-inline">
+    <div class="quick-filters">
       <select name="industry" class="quick-select">
         <option value="">所有行业</option>
         {% for ind in industries %}
-        <option value="{{ ind }}">{{ ind }}</option>
+        <option value="{{ ind.name }}">{{ ind.name }} ({{ ind.count }})</option>
         {% endfor %}
       </select>
       <select name="city" class="quick-select">
@@ -38,28 +33,49 @@
         <option value="博士">博士</option>
         <option value="大专">大专</option>
       </select>
-      <button type="submit" class="filter-btn">筛选</button>
-    </form>
-  </div>
+      <select name="sort_by" class="quick-select">
+        <option value="relevance">按相关度</option>
+        <option value="date">按发布日期</option>
+        <option value="salary_min">按最低月薪</option>
+        <option value="salary_max">按最高月薪</option>
+      </select>
+    </div>
+  </form>
 </div>
 
-<!-- 热门行业快捷入口 -->
 <section class="section">
   <h2 class="section-title">热门行业</h2>
-  <div class="industry-grid" id="hot-industries">
-    <div class="loading">加载中...</div>
+  <div class="industry-grid">
+    {% for ind in industries %}
+    <a href="/search?industry={{ ind.name|urlencode }}" class="industry-card">
+      <span class="ind-count">{{ ind.count }}</span>
+      <span class="ind-name">{{ ind.name }}</span>
+    </a>
+    {% endfor %}
   </div>
 </section>
 
-<!-- 最新招聘 -->
 <section class="section">
-  <h2 class="section-title">最新招聘信息</h2>
-  <div class="job-list" id="latest-jobs">
-    <div class="loading">加载中...</div>
+  <h2 class="section-title">最新招聘</h2>
+  <div class="job-list">
+    {% for job in latest_jobs %}
+    <a href="/job/{{ job.doc_id }}" class="job-card">
+      <div class="job-card-header">
+        <span class="job-title">{{ job.title }}</span>
+        <span class="job-salary">
+          {% if job.salary_min and job.salary_max %}
+            {{ (job.salary_min/1000)|int }}k-{{ (job.salary_max/1000)|int }}k
+          {% else %}面议{% endif %}
+        </span>
+      </div>
+      <div class="job-card-company">{{ job.company }}</div>
+      <div class="job-card-meta">
+        <span>{{ job.city }}</span>
+        <span>{{ job.education }}</span>
+        <span>{{ job.date }}</span>
+      </div>
+    </a>
+    {% endfor %}
   </div>
 </section>
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}

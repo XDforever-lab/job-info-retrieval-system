@@ -1,6 +1,90 @@
 {% extends "base.html" %}
-{% block title %}职位详情 - 上市公司招聘信息检索系统{% endblock %}
+{% block title %}{{ job.title }} - 职位详情{% endblock %}
+
 {% block content %}
-<h2>职位详情</h2>
-<div id="job-detail"><p class="loading">详情页开发中...</p></div>
+{% if error %}
+<div class="error-state"><p>{{ error }}</p><a href="/">返回首页</a></div>
+{% else %}
+<div class="detail-page">
+  <a href="javascript:history.back()" class="back-link">&larr; 返回</a>
+
+  <!-- 基本信息 -->
+  <div class="detail-card">
+    <h1 class="detail-title">{{ job.title }}</h1>
+    <div class="detail-company">{{ job.company }}{% if job.stock_name %} · {{ job.stock_name }}{% endif %}</div>
+    <div class="detail-industry">{{ job.industry }}</div>
+
+    <div class="detail-meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">城市</span>
+        <span class="meta-value">{{ job.city }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">月薪</span>
+        <span class="meta-value">
+          {% if job.salary_min and job.salary_max %}
+            {{ (job.salary_min/1000)|int }}k - {{ (job.salary_max/1000)|int }}k
+          {% else %}面议{% endif %}
+        </span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">学历</span>
+        <span class="meta-value">{{ job.education }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">经验</span>
+        <span class="meta-value">{{ job.experience }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">发布日期</span>
+        <span class="meta-value">{{ job.publish_date }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">截止日期</span>
+        <span class="meta-value">{{ job.end_date }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 职位描述 -->
+  <div class="detail-card">
+    <h2>职位描述</h2>
+    <div class="desc-text">
+      {{ job.description }}
+    </div>
+  </div>
+
+  <!-- 关键词标签 -->
+  {% if keywords %}
+  <div class="detail-card">
+    <h2>关键词标签</h2>
+    <div class="keyword-tags">
+      {% for kw in keywords %}
+      <a href="/search?q={{ kw|urlencode }}" class="kw-tag">{{ kw }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- 相似职位推荐 -->
+  {% if similar %}
+  <div class="detail-card">
+    <h2>相似职位推荐</h2>
+    <div class="similar-grid">
+      {% for s in similar %}
+      <a href="/job/{{ s.id }}" class="similar-card">
+        <div class="sim-score">相似度 {{ '%.2f'|format(s.similarity) }}</div>
+        <div class="sim-title">{{ s.title }}</div>
+        <div class="sim-company">{{ s.company }}</div>
+        <div class="sim-meta">
+          <span>{{ s.city }}</span>
+          {% if s.salary_min %}<span>{{ (s.salary_min/1000)|int }}k-{{ (s.salary_max/1000)|int }}k</span>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
 {% endblock %}

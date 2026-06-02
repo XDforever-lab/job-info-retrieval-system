@@ -32,7 +32,7 @@ import pandas as pd
 import warnings
 warnings.filterwarnings("ignore")
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import SEGMENTED_CSV, STOPWORDS_FILE, DIR_15_CLUSTER
 
 plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei"]

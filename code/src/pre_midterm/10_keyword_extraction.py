@@ -38,7 +38,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import SEGMENTED_CSV, DIR_10_KW, STOPWORDS_FILE
 
 # ── 输出路径 ──

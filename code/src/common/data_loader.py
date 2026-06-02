@@ -3,8 +3,8 @@
 import pandas as pd
 import os
 
-# 项目根目录 (code/)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 项目根目录 (code/) — 从 src/common/ 上溯3级
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 RAW_CSV = os.path.join(DATA_DIR, '上市公司招聘数据2026.csv')
 

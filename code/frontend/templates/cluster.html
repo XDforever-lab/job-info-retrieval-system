@@ -1,6 +1,35 @@
 {% extends "base.html" %}
-{% block title %}聚类视图 - 上市公司招聘信息检索系统{% endblock %}
+{% block title %}聚类视图 - 技能族群{% endblock %}
+
 {% block content %}
-<h2>聚类视图</h2>
-<div id="cluster-viz"><p class="loading">聚类可视化开发中...</p></div>
+<h1 class="page-title">技能族群聚类</h1>
+<p class="page-desc">
+  对 800 个高频技能词做 K-Means 聚类，发现招聘数据中天然存在的 10 个技能族群。<br>
+  方法: K-Means (K=10, k-means++ 初始化) + 等级聚类对比 (Ward/Single/Complete)<br>
+  评估: 簇间分离度 0.78 · 簇内紧密度 0.15
+</p>
+
+{% if clusters %}
+<div class="cluster-grid">
+  {% for cluster in clusters %}
+  <div class="cluster-card">
+    <h3 class="cluster-name">族群 {{ loop.index }}: {{ cluster.name or '未命名' }}</h3>
+    <div class="cluster-words">
+      {% for word in cluster.words[:8] %}
+      <span class="cluster-word">{{ word }}</span>
+      {% endfor %}
+    </div>
+    <div class="cluster-count">{{ cluster.words|length if cluster.words is iterable else cluster.size }} 个词</div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><p>聚类数据加载中，请确保已运行聚类分析脚本</p></div>
+{% endif %}
+
+<!-- PCA 图占位 -->
+<div class="cluster-viz-section">
+  <h2>聚类可视化</h2>
+  <p class="hint">PCA 降维散点图 · 词云矩阵图 请参见 output/15_cluster/ 目录</p>
+</div>
 {% endblock %}

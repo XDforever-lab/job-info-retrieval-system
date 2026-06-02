@@ -1,6 +1,49 @@
 {% extends "base.html" %}
-{% block title %}关于 - 上市公司招聘信息检索系统{% endblock %}
+{% block title %}关于本系统{% endblock %}
+
 {% block content %}
-<h2>关于本系统</h2>
-<p>上市公司招聘信息检索系统 · 信息检索系统实验期末大作业</p>
+<h1 class="page-title">关于本系统</h1>
+
+<div class="about-section">
+  <h2>系统简介</h2>
+  <p>上市公司招聘信息检索系统，是"信息检索系统实验"课程的期末综合大作业。系统以中国 A 股上市公司招聘发布数据为基础，构建面向求职者与行业研究者的垂直领域招聘信息检索平台。</p>
+  <p>系统综合运用了信息检索理论课（信息的存储与组织、信息的检索、信息的展示）和实践课（N-gram 分析、分词评测、关键词抽取、文本分类、文本聚类）的全部知识。</p>
+</div>
+
+<div class="about-section">
+  <h2>数据来源</h2>
+  <table class="about-table">
+    <tr><td>数据名称</td><td>上市公司招聘数据 2026</td></tr>
+    <tr><td>数据规模</td><td>5,000 条（原始 93,602 条中清洗抽样）</td></tr>
+    <tr><td>行业分类</td><td>9 大行业（从原始 81 类归并）</td></tr>
+    <tr><td>覆盖企业</td><td>8,796 家 A 股上市公司</td></tr>
+    <tr><td>数据字段</td><td>14 个字段（企业名称/股票简称/行业/城市/月薪/学历/经验/描述等）</td></tr>
+  </table>
+</div>
+
+<div class="about-section">
+  <h2>技术架构</h2>
+  <table class="about-table">
+    <tr><td>前端框架</td><td>Flask + Jinja2 + ECharts</td></tr>
+    <tr><td>分词器</td><td>CRF 条件随机场 (F1=74.77%)</td></tr>
+    <tr><td>信息组织</td><td>倒排索引 (Lexicon + Posting List, 38,288 词条)</td></tr>
+    <tr><td>检索模型</td><td>VSM + TF-IDF 加权 + 布尔逻辑过滤</td></tr>
+    <tr><td>文本分类</td><td>朴素贝叶斯 (9 类, 微观 F1=25%)</td></tr>
+    <tr><td>文本聚类</td><td>K-Means 词汇聚类 (10 个技能族群)</td></tr>
+    <tr><td>关键词抽取</td><td>TF-IDF (F1=44.61%) + TextRank (F1=41.92%) Pooling</td></tr>
+    <tr><td>存储</td><td>CSV + Pickle + JSON, 内存加载</td></tr>
+  </table>
+</div>
+
+<div class="about-section">
+  <h2>AI 参与声明</h2>
+  <p><strong>个人实现部分：</strong>数据处理策略制定、分词评测标准设计、检索算法核心逻辑、分类/聚类实验变量控制、评测指标体系设计、系统架构设计。</p>
+  <p><strong>AI 辅助部分：</strong>前端 HTML/CSS 模板生成、ECharts 图表配置代码、部分 Python 辅助代码、代码 Debug 辅助、文档格式化。</p>
+</div>
+
+<div class="about-section">
+  <h2>团队信息</h2>
+  <p>信息检索系统实验 · 期末大作业 · 2026</p>
+  <p>指导教师：南京农业大学 信息管理学院</p>
+</div>
 {% endblock %}

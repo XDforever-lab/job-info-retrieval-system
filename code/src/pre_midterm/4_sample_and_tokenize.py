@@ -7,7 +7,7 @@ from datetime import datetime
 random.seed(42)
 
 import os, sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import CLEANED_CSV, SAMPLED_CSV, DIR_4_SAMPLE
 
 INPUT_FILE = CLEANED_CSV

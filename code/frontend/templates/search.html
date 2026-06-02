@@ -1,6 +1,153 @@
 {% extends "base.html" %}
-{% block title %}检索结果 - 上市公司招聘信息检索系统{% endblock %}
+{% block title %}{{ query or '搜索' }} - 检索结果{% endblock %}
+
 {% block content %}
-<h2>检索结果</h2>
-<div id="search-results"><p class="loading">检索功能开发中...</p></div>
+<div class="search-page">
+  <!-- 搜索框 -->
+  <div class="search-header">
+    <form action="/search" method="get" class="search-form-inline">
+      <input type="text" name="q" class="search-input-inline" value="{{ query }}" placeholder="输入关键词...">
+      <input type="hidden" name="sort_by" value="{{ sort_by }}">
+      <input type="hidden" name="industry" value="{{ current_filters.industry }}">
+      <input type="hidden" name="city" value="{{ current_filters.city }}">
+      <input type="hidden" name="education" value="{{ current_filters.education }}">
+      <input type="hidden" name="experience" value="{{ current_filters.experience }}">
+      <button type="submit" class="search-btn">搜索</button>
+    </form>
+    {% if query %}
+    <p class="search-summary">找到 <strong>{{ total }}</strong> 条结果{% if elapsed %}，用时 {{ elapsed }}ms{% endif %}</p>
+    {% endif %}
+  </div>
+
+  <div class="search-layout">
+    <!-- 左侧筛选面板 -->
+    <aside class="filter-panel">
+      <h3>筛选条件</h3>
+
+      <div class="filter-section">
+        <label>行业</label>
+        <select name="industry" class="filter-select" onchange="this.form.submit()" form="filter-form">
+          <option value="">全部</option>
+          {% for ind in filter_opts.industries %}
+          <option value="{{ ind.name }}" {% if current_filters.industry == ind.name %}selected{% endif %}>
+            {{ ind.name }} ({{ ind.count }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label>城市</label>
+        <select name="city" class="filter-select" onchange="this.form.submit()" form="filter-form">
+          <option value="">全部</option>
+          {% for c in filter_opts.cities %}
+          <option value="{{ c.name }}" {% if current_filters.city == c.name %}selected{% endif %}>
+            {{ c.name }} ({{ c.count }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label>学历</label>
+        <select name="education" class="filter-select" onchange="this.form.submit()" form="filter-form">
+          <option value="">不限</option>
+          {% for e in filter_opts.educations %}
+          <option value="{{ e }}" {% if current_filters.education == e %}selected{% endif %}>{{ e }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label>经验</label>
+        <select name="experience" class="filter-select" onchange="this.form.submit()" form="filter-form">
+          <option value="">不限</option>
+          {% for e in filter_opts.experiences %}
+          <option value="{{ e }}" {% if current_filters.experience == e %}selected{% endif %}>{{ e }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label>最低月薪</label>
+        <input type="number" name="salary_min" class="filter-input" value="{{ current_filters.salary_min }}"
+               placeholder="如 10000" form="filter-form" step="1000">
+      </div>
+
+      <div class="filter-section">
+        <label>最高月薪</label>
+        <input type="number" name="salary_max" class="filter-input" value="{{ current_filters.salary_max }}"
+               placeholder="如 50000" form="filter-form" step="1000">
+      </div>
+
+      <form id="filter-form" action="/search" method="get">
+        <input type="hidden" name="q" value="{{ query }}">
+        <input type="hidden" name="sort_by" value="{{ sort_by }}">
+        <button type="submit" class="btn-filter">应用筛选</button>
+      </form>
+    </aside>
+
+    <!-- 右侧结果列表 -->
+    <div class="results-area">
+      <!-- 排序 -->
+      <div class="sort-bar">
+        <span>排序: </span>
+        <a href="{{ url_for('search', q=query, sort_by='relevance', **current_filters) }}"
+           class="sort-link {% if sort_by == 'relevance' %}active{% endif %}">相关度</a>
+        <a href="{{ url_for('search', q=query, sort_by='date', **current_filters) }}"
+           class="sort-link {% if sort_by == 'date' %}active{% endif %}">发布日期</a>
+        <a href="{{ url_for('search', q=query, sort_by='salary_min', **current_filters) }}"
+           class="sort-link {% if sort_by == 'salary_min' %}active{% endif %}">最低月薪</a>
+        <a href="{{ url_for('search', q=query, sort_by='salary_max', **current_filters) }}"
+           class="sort-link {% if sort_by == 'salary_max' %}active{% endif %}">最高月薪</a>
+      </div>
+
+      {% if results %}
+      {% for job in results %}
+      <a href="/job/{{ job.doc_id }}" class="job-card">
+        <div class="job-card-header">
+          <span class="job-title">{{ job.title }}</span>
+          <span class="job-score" title="相关度得分">得分 {{ '%.2f'|format(job.score) }}</span>
+        </div>
+        <div class="job-card-company">{{ job.company }}{% if job.stock_name %} · {{ job.stock_name }}{% endif %}</div>
+        <div class="job-card-meta">
+          <span>{{ job.city }}</span>
+          {% if job.salary_min and job.salary_max %}
+          <span>{{ (job.salary_min/1000)|int }}k-{{ (job.salary_max/1000)|int }}k</span>
+          {% endif %}
+          <span>{{ job.education }}</span>
+          <span>{{ job.experience }}</span>
+          <span>{{ job.publish_date }}</span>
+        </div>
+        <div class="job-card-desc">{{ job.snippet|safe }}</div>
+      </a>
+      {% endfor %}
+
+      <!-- 分页 -->
+      {% if total_pages > 1 %}
+      <div class="pagination">
+        {% if page > 1 %}
+        <a href="{{ url_for('search', q=query, page=page-1, sort_by=sort_by, **current_filters) }}" class="page-link">上一页</a>
+        {% endif %}
+        {% for p in range(1, total_pages + 1) %}
+          {% if p >= page - 2 and p <= page + 2 %}
+          <a href="{{ url_for('search', q=query, page=p, sort_by=sort_by, **current_filters) }}"
+             class="page-link {% if p == page %}active{% endif %}">{{ p }}</a>
+          {% endif %}
+        {% endfor %}
+        {% if page < total_pages %}
+        <a href="{{ url_for('search', q=query, page=page+1, sort_by=sort_by, **current_filters) }}" class="page-link">下一页</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="empty-state">
+        <p>未找到匹配的职位</p>
+        <p class="hint">请尝试修改关键词或放宽筛选条件</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

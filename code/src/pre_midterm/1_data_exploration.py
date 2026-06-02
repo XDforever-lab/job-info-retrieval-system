@@ -24,7 +24,7 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import DATA_DIR, STATS_SUMMARY
 
 # ── 0. 数据加载 ──────────────────────────────────

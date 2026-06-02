@@ -34,7 +34,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import SEGMENTED_CSV, DIR_9_NGRAM
 
 plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei"]

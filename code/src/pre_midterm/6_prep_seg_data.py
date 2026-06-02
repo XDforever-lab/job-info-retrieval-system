@@ -23,7 +23,7 @@ import re
 
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import SAMPLED_CSV, SEG_RAW_TXT, SEG_JIEBA_TXT, SEG_META_JSON
 
 # ── 配置 ────────────────────────────────────────

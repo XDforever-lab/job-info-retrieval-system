@@ -1,6 +1,23 @@
 {% extends "base.html" %}
-{% block title %}行业浏览 - 上市公司招聘信息检索系统{% endblock %}
+{% block title %}行业浏览{% endblock %}
+
 {% block content %}
-<h2>行业浏览</h2>
-<div id="industry-list"><p class="loading">行业浏览开发中...</p></div>
+<h1 class="page-title">行业浏览</h1>
+<p class="page-desc">按行业分类浏览招聘信息，共 9 大行业类别</p>
+
+<div class="industry-grid-large">
+  {% for ind in industries %}
+  <a href="/search?industry={{ ind.name|urlencode }}" class="industry-card-big">
+    <h3>{{ ind.name }}</h3>
+    <div class="ind-count-big">{{ ind.count }} 条招聘</div>
+    {% if ind.keywords %}
+    <div class="ind-keywords">
+      {% for kw in ind.keywords %}
+      <span class="kw-tag-sm">{{ kw }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </a>
+  {% endfor %}
+</div>
 {% endblock %}

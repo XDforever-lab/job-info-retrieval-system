@@ -25,7 +25,7 @@ import pycrfsuite
 import sklearn_crfsuite
 from tqdm import tqdm
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import (CLEANED_CSV, GOLD_STANDARD, OUTPUT_DIR, SEGMENTED_CSV,
                     DIR_7_SEG_EVAL, DICT_FILE)
 

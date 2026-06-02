@@ -24,7 +24,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import DATA_DIR, CLEANED_CSV, CLEANER_REPORT, QUALITY_HTML, PROCESSED_CSV
 
 # ── 配置常量 ────────────────────────────────────

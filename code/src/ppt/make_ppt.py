@@ -1,6 +1,6 @@
 """Build PPT HTML - plain strings, no f-string issues"""
 import os, base64, json, sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from config import *
 
 OUT = "C:/Users/ZhangQichen/Desktop/recruit/code/ppt/index.html"

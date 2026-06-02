@@ -1,49 +1,32 @@
-# 原始数据文件（体积过大，不纳入版本管理）
+# ── 原始数据（84MB，不纳入版本管理） ──
 code/data/*.csv
-code/data/*.tsv
-code/data/*.xlsx
-code/output/*.csv
-code/output/*.csv
-code/output/2_preprocess/*.csv
-code/output/3_cleaner/*.csv
 
+# ── 中间产物（非系统必需） ──
 code/output/2_preprocess/上市公司招聘数据_processed.csv
-code/output/3_cleaner/上市公司招聘数据_cleaned.csv
 
-# Python 缓存
+# ── Python 缓存 ──
 __pycache__/
 *.py[cod]
 *.pyo
 *.egg-info/
-*.egg
 
-# Jupyter
+# ── Jupyter ──
 .ipynb_checkpoints/
 *.ipynb
 
-# 模型文件（体积大，每次运行可重新生成）
-code/models/*.pkl
-code/models/*.joblib
-code/models/*.npz
-code/models/*.npy
-
-# 虚拟环境
+# ── 虚拟环境 ──
 venv/
 .venv/
 env/
 *.conda/
 
-# IDE
+# ── IDE ──
 .vscode/
 .idea/
 
-# 系统文件
+# ── 系统文件 ──
 .DS_Store
 Thumbs.db
 
-# 临时输出
-code/output/temp/
+# ── 临时文件 ──
 *.log
-
-# 生成的报告
-code/output/reports/*.html

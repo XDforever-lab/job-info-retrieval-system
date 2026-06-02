@@ -1,6 +1,87 @@
 {% extends "base.html" %}
-{% block title %}数据统计 - 上市公司招聘信息检索系统{% endblock %}
+{% block title %}数据统计{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+{% endblock %}
+
 {% block content %}
-<h2>数据统计</h2>
-<div id="stats-charts"><p class="loading">统计图表开发中...</p></div>
+<h1 class="page-title">数据统计仪表盘</h1>
+
+<div class="stats-grid">
+  <!-- 行业招聘数量柱状图 -->
+  <div class="chart-card">
+    <h3 class="chart-title">行业招聘数量 (Top-9)</h3>
+    <div id="chart-industry" class="chart-box"></div>
+  </div>
+
+  <!-- 城市招聘热度柱状图 -->
+  <div class="chart-card">
+    <h3 class="chart-title">城市招聘热度 (Top-10)</h3>
+    <div id="chart-city" class="chart-box"></div>
+  </div>
+
+  <!-- 薪资分布直方图 -->
+  <div class="chart-card">
+    <h3 class="chart-title">薪资分布</h3>
+    <div id="chart-salary" class="chart-box"></div>
+  </div>
+
+  <!-- 学历要求饼图 -->
+  <div class="chart-card">
+    <h3 class="chart-title">学历要求分布</h3>
+    <div id="chart-edu" class="chart-box"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var indNames = {{ industry_data|map(attribute='name')|list|tojson }};
+var indCounts = {{ industry_data|map(attribute='count')|list|tojson }};
+var cityNames = {{ city_data|map(attribute='name')|list|tojson }};
+var cityCounts = {{ city_data|map(attribute='count')|list|tojson }};
+var salaryBins = {{ salary_bins|tojson }};
+var eduData = {{ edu_data|tojson }};
+var expData = {{ exp_data|tojson }};
+
+// 行业柱状图
+echarts.init(document.getElementById('chart-industry')).setOption({
+  tooltip: {}, grid: { left: 120, right: 20, top: 10, bottom: 30 },
+  xAxis: { type: 'value' },
+  yAxis: { type: 'category', data: indNames.reverse(), axisLabel: { fontSize: 11 } },
+  series: [{ type: 'bar', data: indCounts.reverse(), itemStyle: { color: '#1a73e8' } }]
+});
+
+// 城市柱状图
+echarts.init(document.getElementById('chart-city')).setOption({
+  tooltip: {}, grid: { left: 60, right: 20, top: 10, bottom: 30 },
+  xAxis: { type: 'category', data: cityNames, axisLabel: { rotate: 30, fontSize: 10 } },
+  yAxis: { type: 'value' },
+  series: [{ type: 'bar', data: cityCounts, itemStyle: { color: '#34a853' } }]
+});
+
+// 薪资直方图
+var bins = Object.keys(salaryBins);
+var binVals = Object.values(salaryBins);
+echarts.init(document.getElementById('chart-salary')).setOption({
+  tooltip: {}, grid: { left: 50, right: 20, top: 10, bottom: 40 },
+  xAxis: { type: 'category', data: bins, axisLabel: { fontSize: 10 } },
+  yAxis: { type: 'value' },
+  series: [{ type: 'bar', data: binVals, itemStyle: { color: '#1a73e8' } }]
+});
+
+// 学历饼图
+var eduPie = [];
+for (var k in eduData) { eduPie.push({name: k, value: eduData[k]}); }
+echarts.init(document.getElementById('chart-edu')).setOption({
+  tooltip: { trigger: 'item' },
+  legend: { orient: 'vertical', right: 10, top: 'center' },
+  series: [{
+    type: 'pie', radius: ['30%', '65%'],
+    data: eduPie,
+    emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.2)' } }
+  }]
+});
+</script>
 {% endblock %}
