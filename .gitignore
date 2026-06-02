@@ -3,6 +3,9 @@ code/data/*.csv
 
 # ── 中间产物（非系统必需） ──
 code/output/2_preprocess/上市公司招聘数据_processed.csv
+code/output/分词采样结果_200条.csv
+code/output/上市公司招聘数据_processed.csv
+code/output/上市公司招聘数据_cleaned.csv
 
 # ── Python 缓存 ──
 __pycache__/
