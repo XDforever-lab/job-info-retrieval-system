@@ -99,13 +99,13 @@
       <div class="sort-bar">
         <span>排序: </span>
         <a href="{{ url_for('search', q=query, sort_by='relevance', **current_filters) }}"
-           class="sort-link {% if sort_by == 'relevance' %}active{% endif %}">相关度</a>
+           class="sort-link {% if sort_by == 'relevance' %}active{% endif %}">相关度 ↓</a>
         <a href="{{ url_for('search', q=query, sort_by='date', **current_filters) }}"
-           class="sort-link {% if sort_by == 'date' %}active{% endif %}">发布日期</a>
+           class="sort-link {% if sort_by == 'date' %}active{% endif %}">发布日期 ↓</a>
         <a href="{{ url_for('search', q=query, sort_by='salary_min', **current_filters) }}"
-           class="sort-link {% if sort_by == 'salary_min' %}active{% endif %}">最低月薪</a>
+           class="sort-link {% if sort_by == 'salary_min' %}active{% endif %}">起薪 ↓</a>
         <a href="{{ url_for('search', q=query, sort_by='salary_max', **current_filters) }}"
-           class="sort-link {% if sort_by == 'salary_max' %}active{% endif %}">最高月薪</a>
+           class="sort-link {% if sort_by == 'salary_max' %}active{% endif %}">顶薪 ↓</a>
       </div>
 
       {% if results %}

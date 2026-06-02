@@ -30,8 +30,8 @@ print("=" * 50)
 @app.route('/')
 def index():
     """首页 —— 搜索门户"""
-    # 热门行业 Top-8
-    industries = _engine.df['上市公司行业'].value_counts().head(8)
+    # 热门行业 Top-9
+    industries = _engine.df['上市公司行业'].value_counts().head(9)
     hot_industries = [{'name': k, 'count': int(v)} for k, v in industries.items()]
 
     # 最新 8 条招聘
