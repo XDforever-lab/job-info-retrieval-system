@@ -777,6 +777,13 @@ a:hover { text-decoration: underline; }
 }
 
 /* === 响应式 === */
+.cluster-viz-section { margin-top: 3rem; }
+.cluster-viz-section h2 { font-size: 1.4rem; color: #2c3e50; margin-bottom: 1rem; }
+.cluster-viz-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.cluster-viz-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; padding: 0.5rem; }
+.cluster-viz-card img { width: 100%; height: auto; display: block; border-radius: 8px; }
+.cluster-viz-card .viz-caption { text-align: center; font-size: 0.85rem; color: #666; margin-top: 0.5rem; }
+
 @media (max-width: 768px) {
   .search-layout { flex-direction: column; }
   .filter-panel { width: 100%; position: static; }

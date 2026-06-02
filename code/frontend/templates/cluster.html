@@ -6,14 +6,14 @@
 <p class="page-desc">
   对 800 个高频技能词做 K-Means 聚类，发现招聘数据中天然存在的 10 个技能族群。<br>
   方法: K-Means (K=10, k-means++ 初始化) + 等级聚类对比 (Ward/Single/Complete)<br>
-  评估: 簇间分离度 0.78 · 簇内紧密度 0.15
+  评估: 簇间分离度 {{ inter_dist }} · 簇内紧密度 {{ intra_sim }}
 </p>
 
 {% if clusters %}
 <div class="cluster-grid">
   {% for cluster in clusters %}
   <div class="cluster-card">
-    <h3 class="cluster-name">族群 {{ loop.index }}: {{ cluster.name or '未命名' }}</h3>
+    <h3 class="cluster-name">族群 {{ loop.index }}: {{ cluster.name }}</h3>
     <div class="cluster-words">
       {% for word in cluster.words[:8] %}
       <span class="cluster-word">{{ word }}</span>
@@ -30,6 +30,17 @@
 <!-- PCA 图占位 -->
 <div class="cluster-viz-section">
   <h2>聚类可视化</h2>
-  <p class="hint">PCA 降维散点图 · 词云矩阵图 请参见 output/15_cluster/ 目录</p>
+  {% if images %}
+  <div class="cluster-viz-grid">
+    {% for img in images %}
+    <div class="cluster-viz-card">
+      <img src="/cluster_img/{{ img.filename }}" alt="{{ img.name }}">
+      <p class="viz-caption">{{ img.name }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="hint">聚类可视化图片未生成，请先运行聚类分析脚本</p>
+  {% endif %}
 </div>
 {% endblock %}

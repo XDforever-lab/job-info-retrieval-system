@@ -1,0 +1,392 @@
+{
+  "num_queries": 16,
+  "avg_P@5": 0.75,
+  "avg_P@10": 0.6312,
+  "avg_R_Precision": 0.8869,
+  "MAP": 0.9322,
+  "avg_NDCG@10": 0.9611,
+  "pr_curve_11pt": [
+    {
+      "recall": 0.0,
+      "precision": 0.9792
+    },
+    {
+      "recall": 0.1,
+      "precision": 0.9792
+    },
+    {
+      "recall": 0.2,
+      "precision": 0.9792
+    },
+    {
+      "recall": 0.3,
+      "precision": 0.9792
+    },
+    {
+      "recall": 0.4,
+      "precision": 0.9479
+    },
+    {
+      "recall": 0.5,
+      "precision": 0.9479
+    },
+    {
+      "recall": 0.6,
+      "precision": 0.9167
+    },
+    {
+      "recall": 0.7,
+      "precision": 0.9089
+    },
+    {
+      "recall": 0.8,
+      "precision": 0.9089
+    },
+    {
+      "recall": 0.9,
+      "precision": 0.8901
+    },
+    {
+      "recall": 1.0,
+      "precision": 0.8901
+    }
+  ],
+  "per_query": [
+    {
+      "query_id": 1,
+      "query": "Python",
+      "desc": "单关键词-技能",
+      "total_hits": 48,
+      "time_ms": 70.6,
+      "num_annotated": 10,
+      "num_relevant": 3,
+      "P@5": 0.4,
+      "P@10": 0.3,
+      "R-Precision": 0.3333,
+      "AP": 0.625,
+      "NDCG@10": 0.8194,
+      "confusion_matrix": {
+        "retrieved_relevant": 3,
+        "retrieved_nonrelevant": 7,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 3
+      }
+    },
+    {
+      "query_id": 2,
+      "query": "财务",
+      "desc": "单关键词-职能",
+      "total_hits": 464,
+      "time_ms": 80.0,
+      "num_annotated": 10,
+      "num_relevant": 10,
+      "P@5": 1.0,
+      "P@10": 1.0,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 10,
+        "retrieved_nonrelevant": 0,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 10
+      }
+    },
+    {
+      "query_id": 4,
+      "query": "电气",
+      "desc": "单关键词-行业特征词",
+      "total_hits": 301,
+      "time_ms": 71.2,
+      "num_annotated": 10,
+      "num_relevant": 9,
+      "P@5": 1.0,
+      "P@10": 0.9,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 9,
+        "retrieved_nonrelevant": 1,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 9
+      }
+    },
+    {
+      "query_id": 5,
+      "query": "Python 开发",
+      "desc": "多关键词-技能组合",
+      "total_hits": 34,
+      "time_ms": 75.1,
+      "num_annotated": 10,
+      "num_relevant": 2,
+      "P@5": 0.4,
+      "P@10": 0.2,
+      "R-Precision": 0.5,
+      "AP": 0.75,
+      "NDCG@10": 0.8772,
+      "confusion_matrix": {
+        "retrieved_relevant": 2,
+        "retrieved_nonrelevant": 8,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 2
+      }
+    },
+    {
+      "query_id": 6,
+      "query": "财务 审计",
+      "desc": "多关键词-职能组合",
+      "total_hits": 121,
+      "time_ms": 71.4,
+      "num_annotated": 10,
+      "num_relevant": 10,
+      "P@5": 1.0,
+      "P@10": 1.0,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 10,
+        "retrieved_nonrelevant": 0,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 10
+      }
+    },
+    {
+      "query_id": 7,
+      "query": "机器学习 算法",
+      "desc": "多关键词-AI领域",
+      "total_hits": 16,
+      "time_ms": 73.9,
+      "num_annotated": 10,
+      "num_relevant": 8,
+      "P@5": 1.0,
+      "P@10": 0.8,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 8,
+        "retrieved_nonrelevant": 2,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 8
+      }
+    },
+    {
+      "query_id": 8,
+      "query": "销售 经理 上海",
+      "desc": "多关键词-岗位+城市",
+      "total_hits": 13,
+      "time_ms": 71.9,
+      "num_annotated": 10,
+      "num_relevant": 10,
+      "P@5": 1.0,
+      "P@10": 1.0,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 10,
+        "retrieved_nonrelevant": 0,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 10
+      }
+    },
+    {
+      "query_id": 9,
+      "query": "开发",
+      "desc": "行业限定-IT硬件",
+      "total_hits": 68,
+      "time_ms": 100.3,
+      "num_annotated": 10,
+      "num_relevant": 7,
+      "P@5": 1.0,
+      "P@10": 0.7,
+      "R-Precision": 0.8571,
+      "AP": 0.9571,
+      "NDCG@10": 0.9878,
+      "confusion_matrix": {
+        "retrieved_relevant": 7,
+        "retrieved_nonrelevant": 3,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 7
+      }
+    },
+    {
+      "query_id": 10,
+      "query": "工艺",
+      "desc": "行业限定-电气制造",
+      "total_hits": 31,
+      "time_ms": 86.1,
+      "num_annotated": 10,
+      "num_relevant": 6,
+      "P@5": 1.0,
+      "P@10": 0.6,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 6,
+        "retrieved_nonrelevant": 4,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 6
+      }
+    },
+    {
+      "query_id": 11,
+      "query": "投资",
+      "desc": "行业限定-金融",
+      "total_hits": 29,
+      "time_ms": 80.4,
+      "num_annotated": 10,
+      "num_relevant": 10,
+      "P@5": 1.0,
+      "P@10": 1.0,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 10,
+        "retrieved_nonrelevant": 0,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 10
+      }
+    },
+    {
+      "query_id": 12,
+      "query": "Python",
+      "desc": "城市限定-上海",
+      "total_hits": 8,
+      "time_ms": 71.2,
+      "num_annotated": 8,
+      "num_relevant": 2,
+      "P@5": 0.4,
+      "P@10": 0.2,
+      "R-Precision": 0.5,
+      "AP": 0.5833,
+      "NDCG@10": 0.6934,
+      "confusion_matrix": {
+        "retrieved_relevant": 2,
+        "retrieved_nonrelevant": 8,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": -2,
+        "total_relevant_in_annotated": 2
+      }
+    },
+    {
+      "query_id": 13,
+      "query": "财务",
+      "desc": "城市限定-北京",
+      "total_hits": 45,
+      "time_ms": 80.6,
+      "num_annotated": 10,
+      "num_relevant": 10,
+      "P@5": 1.0,
+      "P@10": 1.0,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 10,
+        "retrieved_nonrelevant": 0,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 10
+      }
+    },
+    {
+      "query_id": 14,
+      "query": "工程师",
+      "desc": "城市限定-深圳",
+      "total_hits": 64,
+      "time_ms": 82.8,
+      "num_annotated": 10,
+      "num_relevant": 10,
+      "P@5": 1.0,
+      "P@10": 1.0,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 10,
+        "retrieved_nonrelevant": 0,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 10
+      }
+    },
+    {
+      "query_id": 16,
+      "query": "开发",
+      "desc": "薪资限定-月薪30k+",
+      "total_hits": 49,
+      "time_ms": 90.9,
+      "num_annotated": 10,
+      "num_relevant": 1,
+      "P@5": 0.2,
+      "P@10": 0.1,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 1,
+        "retrieved_nonrelevant": 9,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": 0,
+        "total_relevant_in_annotated": 1
+      }
+    },
+    {
+      "query_id": 17,
+      "query": "Python",
+      "desc": "复合-上海+本科",
+      "total_hits": 4,
+      "time_ms": 72.9,
+      "num_annotated": 4,
+      "num_relevant": 2,
+      "P@5": 0.4,
+      "P@10": 0.2,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 2,
+        "retrieved_nonrelevant": 8,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": -6,
+        "total_relevant_in_annotated": 2
+      }
+    },
+    {
+      "query_id": 19,
+      "query": "开发",
+      "desc": "复合-北京+硕士+20k+",
+      "total_hits": 5,
+      "time_ms": 91.7,
+      "num_annotated": 5,
+      "num_relevant": 1,
+      "P@5": 0.2,
+      "P@10": 0.1,
+      "R-Precision": 1.0,
+      "AP": 1.0,
+      "NDCG@10": 1.0,
+      "confusion_matrix": {
+        "retrieved_relevant": 1,
+        "retrieved_nonrelevant": 9,
+        "not_retrieved_relevant": 0,
+        "not_retrieved_nonrelevant": -5,
+        "total_relevant_in_annotated": 1
+      }
+    }
+  ]
+}

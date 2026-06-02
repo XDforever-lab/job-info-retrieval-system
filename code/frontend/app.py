@@ -5,7 +5,7 @@ import os
 import sys
 import time
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.post_midterm.search_engine import SearchEngine
@@ -216,16 +216,47 @@ def statistics():
 @app.route('/cluster')
 def cluster_view():
     """聚类视图页"""
-    # 读取聚类结果
-    cluster_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                               'output', '15_cluster', 'word_cluster_info.json')
-    cluster_data = []
+    cluster_list = []
+    intra_sim = 0
+    inter_dist = 0
+
+    cluster_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                              'output', '15_cluster')
+    cluster_file = os.path.join(cluster_dir, 'word_cluster_info.json')
     if os.path.exists(cluster_file):
         import json
         with open(cluster_file, 'r', encoding='utf-8') as f:
-            cluster_data = json.load(f)
+            raw = json.load(f)
+        intra_sim = raw.get('intra_sim', 0)
+        inter_dist = raw.get('inter_dist', 0)
+        clusters_dict = raw.get('clusters', {})
+        for key, val in clusters_dict.items():
+            words = val.get('words', [])
+            cluster_list.append({
+                'name': ' · '.join(words[:3]) if words else f'群组 {int(key) + 1}',
+                'words': words,
+                'size': val.get('size', 0),
+            })
 
-    return render_template('cluster.html', clusters=cluster_data)
+    images = []
+    if os.path.isdir(cluster_dir):
+        for f in sorted(os.listdir(cluster_dir)):
+            if f.endswith('.png'):
+                name = f.replace('word_', '').replace('.png', '').replace('_', ' ')
+                images.append({'filename': f, 'name': name})
+
+    return render_template('cluster.html',
+                         clusters=cluster_list,
+                         intra_sim=intra_sim,
+                         inter_dist=inter_dist,
+                         images=images)
+
+
+@app.route('/cluster_img/<filename>')
+def cluster_img(filename):
+    cluster_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                              'output', '15_cluster')
+    return send_from_directory(cluster_dir, filename)
 
 
 @app.route('/about')
