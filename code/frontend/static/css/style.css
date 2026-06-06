@@ -635,7 +635,7 @@ a:hover { color: var(--accent); }
 }
 
 /* === Detail Page === */
-.detail-page { max-width: 720px; }
+.detail-page { max-width: 960px; margin: 0 auto; }
 
 .back-link {
   display: inline-block;

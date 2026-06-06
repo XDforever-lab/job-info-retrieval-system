@@ -97,9 +97,11 @@ def search():
         if not job:
             continue
         snippet = generate_snippet(job['description'], result['query_terms'], max_len=150)
+        title_html = highlight_keywords(job['title'], result['query_terms'])
         job['doc_id'] = doc_id
         job['score'] = round(score, 4)
         job['snippet'] = snippet
+        job['title_html'] = title_html
         items.append(job)
 
     # 筛选选项

@@ -112,7 +112,7 @@
       {% for job in results %}
       <a href="/job/{{ job.doc_id }}" class="job-card">
         <div class="job-card-header">
-          <span class="job-title">{{ job.title }}</span>
+          <span class="job-title">{{ job.title_html|safe }}</span>
           <span class="job-score" title="相关度得分">得分 {{ '%.2f'|format(job.score) }}</span>
         </div>
         <div class="job-card-company">{{ job.company }}{% if job.stock_name %} · {{ job.stock_name }}{% endif %}</div>
