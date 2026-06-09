@@ -296,6 +296,14 @@ class SearchEngine:
             if pub_date > filters['date_to']:
                 return False
 
+        # 排除词: 岗位名或描述包含排除词 → 过滤掉
+        if 'exclude' in filters and filters['exclude']:
+            title = str(row.get('招聘岗位', ''))
+            desc = str(row.get('职位描述', ''))
+            exclude_term = filters['exclude']
+            if exclude_term in title or exclude_term in desc:
+                return False
+
         return True
 
     # ══════════════════════════════════════════════════════
@@ -357,11 +365,11 @@ class SearchEngine:
     def search(self, query_text, filters=None, sort_by='relevance',
                page=1, page_size=None):
         """
-        主检索函数
+        主检索函数 —— 集成智能解析
 
         Args:
-            query_text: 用户输入的关键词, 如 "Python 开发"
-            filters:    结构化筛选条件 dict
+            query_text: 用户输入, 支持自然语言, 如 "上海月薪2万以上Python开发 本科"
+            filters:    用户手动指定的筛选条件 dict (优先级高于自动解析)
             sort_by:    'relevance' | 'date' | 'salary_min' | 'salary_max'
             page:       页码 (从1开始)
             page_size:  每页条数 (默认20)
@@ -369,29 +377,50 @@ class SearchEngine:
         Returns:
             {
                 'results': [(doc_id, score), ...],
-                'total': int,       # 总命中数
-                'page': int,
-                'page_size': int,
-                'total_pages': int,
-                'time': float,      # 检索耗时(秒)
-                'query_terms': list # 分词结果
+                'total': int,
+                'page': int, 'page_size': int, 'total_pages': int,
+                'time': float,
+                'query_terms': list,
+                'hints': [str, ...],      # 智能解析提示
+                'parsed': dict,            # 解析出的结构化条件
             }
         """
         t0 = time.perf_counter()
 
-        # 1. 解析查询
+        # 0. 智能解析自然语言输入
+        from src.post_midterm.query_parser import parse_query as smart_parse
+        parsed = smart_parse(query_text)
+        hints = parsed['hints']
+
+        # 策略: 用原始 query_text 做 VSM 文本匹配(保证召回率)
+        #       用解析出的结构化条件做布尔过滤(保证精准度)
+        #       两者互补, 不互相削弱
+        merged_filters = dict(filters) if filters else {}
+        auto = parsed['parsed']
+        if auto.get('city') and 'city' not in merged_filters:
+            merged_filters['city'] = auto['city']
+        if auto.get('education') and 'education' not in merged_filters:
+            merged_filters['education'] = auto['education']
+        if auto.get('industry') and 'industry' not in merged_filters:
+            merged_filters['industry'] = auto['industry']
+        if auto.get('experience') and 'experience' not in merged_filters:
+            merged_filters['experience'] = auto['experience']
+        if auto.get('salary_min') is not None and 'salary_min' not in merged_filters:
+            merged_filters['salary_min'] = auto['salary_min']
+        if auto.get('salary_max') is not None and 'salary_max' not in merged_filters:
+            merged_filters['salary_max'] = auto['salary_max']
+        if auto.get('exclude') and 'exclude' not in merged_filters:
+            merged_filters['exclude'] = auto['exclude']
+
+        # 1. 解析查询 (用原始输入, 保证召回)
         query_terms = self.parse_query(query_text)
 
-        # 2. 布尔检索 → 候选文档集
-        if query_terms:
-            candidate_ids = self.query_to_bool(query_terms)
-        else:
-            # 无查询词 → 返回全部文档 (仅筛选)
-            candidate_ids = set(range(self.N))
+        # 2. 全量 VSM 打分 (对 5000 篇文档, 稀疏矩阵乘法 ~2ms, 无需布尔预筛选)
+        candidate_ids = set(range(self.N))
 
-        # 3. 布尔过滤 (结构化字段)
-        if filters:
-            candidate_ids = set(self.apply_boolean_filter(candidate_ids, filters))
+        # 3. 结构化过滤
+        if merged_filters:
+            candidate_ids = set(self.apply_boolean_filter(candidate_ids, merged_filters))
 
         if not candidate_ids:
             elapsed = time.perf_counter() - t0
@@ -399,7 +428,9 @@ class SearchEngine:
                 'results': [], 'total': 0, 'page': page,
                 'page_size': page_size or SEARCH_PAGE_SIZE,
                 'total_pages': 0, 'time': round(elapsed, 4),
-                'query_terms': query_terms
+                'query_terms': query_terms,
+                'hints': hints, 'parsed': parsed['parsed'],
+                'original_query': query_text
             }
 
         # 4. VSM 余弦相似度计算
@@ -425,6 +456,9 @@ class SearchEngine:
         elapsed = time.perf_counter() - t0
         paginated['time'] = round(elapsed, 4)
         paginated['query_terms'] = query_terms
+        paginated['hints'] = hints
+        paginated['parsed'] = parsed
+        paginated['original_query'] = query_text
 
         return paginated
 

@@ -16,6 +16,13 @@
     </form>
     {% if query %}
     <p class="search-summary">找到 <strong>{{ total }}</strong> 条结果{% if elapsed %}，用时 {{ elapsed }}ms{% endif %}</p>
+    {% if hints %}
+    <div class="parse-hints">
+      {% for h in hints %}
+      <span class="parse-hint-item">{{ h }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
     {% endif %}
   </div>
 

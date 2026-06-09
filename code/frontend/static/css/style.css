@@ -460,6 +460,25 @@ a:hover { color: var(--accent); }
   letter-spacing: 0.02em;
 }
 
+/* 智能解析提示条 */
+.parse-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.parse-hint-item {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0.02em;
+  color: var(--text-sub);
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+
 .search-layout {
   display: flex;
   gap: 48px;

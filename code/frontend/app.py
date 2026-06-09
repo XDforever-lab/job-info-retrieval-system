@@ -121,6 +121,7 @@ def search():
                          elapsed=round(result['time'] * 1000, 1),
                          query_terms=result['query_terms'],
                          sort_by=sort_by,
+                         hints=result.get('hints', []),
                          current_filters={'industry': industry, 'city': city,
                                          'education': education, 'experience': experience,
                                          'salary_min': salary_min, 'salary_max': salary_max},
