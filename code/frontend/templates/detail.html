@@ -50,7 +50,7 @@
   <div class="detail-card">
     <h2>职位描述</h2>
     <div class="desc-text">
-      {{ job.description }}
+      {{ job.description | format_description | safe }}
     </div>
   </div>
 

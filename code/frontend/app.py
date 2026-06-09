@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import sys
 import time
 
@@ -429,6 +430,40 @@ def highlight_filter(text, terms):
     if not terms:
         return text
     return highlight_keywords(text, terms)
+
+
+_SECTION_HEADERS = ['岗位职责', '任职资格', '任职要求', '职位描述', '岗位要求',
+                    '工作职责', '工作内容', '职位要求', '资格要求', '招聘要求',
+                    '岗位介绍', '福利待遇', '薪资福利', '公司介绍', '公司简介',
+                    '职位信息', '岗位信息', '工作职责描述', '主要职责']
+
+
+@app.template_filter('format_description')
+def format_description_filter(text):
+    """智能格式化职位描述: 识别分节标题 + 编号列表 + 自然分段"""
+    if not text:
+        return text
+    # 1. 将连续空格/中文顿号后的编号前面插入换行
+    text = re.sub(r'([。！？\s])(\d+[\.\、\)）])', r'\1\n\2', text)
+    # 2. 分节标题前插入换行
+    for h in _SECTION_HEADERS:
+        text = re.sub(rf'(?<=[。！？\s])({h}[：:])', r'\n\n\1', text)
+        text = re.sub(rf'^({h}[：:])', r'\1', text)
+    # 3. 按换行分割
+    lines = text.replace('\r\n', '\n').replace('\r', '\n').split('\n')
+    formatted = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        is_header = any(line.startswith(h) for h in _SECTION_HEADERS)
+        if is_header:
+            formatted.append(f'<h4 class="desc-section-title">{line}</h4>')
+        elif re.match(r'^[\d一二三四五六七八九十]+[\.\、\)）]', line):
+            formatted.append(f'<p class="desc-item">{line}</p>')
+        else:
+            formatted.append(f'<p class="desc-para">{line}</p>')
+    return ''.join(formatted)
 
 
 if __name__ == '__main__':

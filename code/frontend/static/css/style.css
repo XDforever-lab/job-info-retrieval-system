@@ -727,9 +727,35 @@ a:hover { color: var(--accent); }
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 14px;
   line-height: 1.9;
-  white-space: pre-wrap;
   color: var(--text-mid);
   letter-spacing: 0.01em;
+}
+
+/* 描述分节标题: 岗位职责 / 任职资格 等 */
+.desc-section-title {
+  font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 1.4em 0 0.5em;
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid var(--border-subtle);
+  letter-spacing: 0.04em;
+}
+.desc-section-title:first-child { margin-top: 0; }
+
+/* 编号条目 */
+.desc-item {
+  margin: 0.35em 0 0.35em 0.8em;
+  text-indent: -0.8em;
+  padding-left: 1.4em;
+  line-height: 1.85;
+}
+
+/* 普通段落 */
+.desc-para {
+  margin: 0.5em 0;
+  line-height: 1.85;
 }
 
 .detail-card h2 {
