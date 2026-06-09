@@ -39,7 +39,7 @@ a:hover { color: var(--accent); }
 
 /* === Navigation === */
 .navbar {
-  background: var(--bg);
+  background: #f3efe7;
   border-bottom: 1px solid var(--border-subtle);
   position: sticky;
   top: 0;
