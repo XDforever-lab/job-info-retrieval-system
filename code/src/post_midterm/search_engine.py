@@ -39,6 +39,22 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 from config import (CLEANED_CSV, SEGMENTED_CSV, STOPWORDS_FILE, MODEL_DIR,
                     SEARCH_PAGE_SIZE, TITLE_WEIGHT, CONTENT_WEIGHT, COMPANY_BONUS)
 
+def _extract_struct_words(filters):
+    """从已识别的结构化条件中提取词汇, 用于从 VSM 查询词中剔除"""
+    import jieba
+    words = set()
+    for val in [filters.get('city', ''), filters.get('education', ''),
+                filters.get('experience', ''), filters.get('industry', ''),
+                filters.get('exclude', '')]:
+        if val:
+            # 添加原值 + Jieba 分词结果
+            for w in jieba.cut(str(val)):
+                w = w.strip()
+                if len(w) >= 2:
+                    words.add(w)
+    return words
+
+
 # ── 文件路径 ──────────────────────────────────────
 INDEX_FILE = os.path.join(MODEL_DIR, 'inverted_index.pkl')
 TFIDF_MATRIX_FILE = os.path.join(MODEL_DIR, 'tfidf_matrix.npz')
@@ -412,10 +428,15 @@ class SearchEngine:
         if auto.get('exclude') and 'exclude' not in merged_filters:
             merged_filters['exclude'] = auto['exclude']
 
-        # 1. 解析查询 (用原始输入, 保证召回)
+        # 1. 解析查询
         query_terms = self.parse_query(query_text)
 
-        # 2. 全量 VSM 打分 (对 5000 篇文档, 稀疏矩阵乘法 ~2ms, 无需布尔预筛选)
+        # 1.5 剔除已被识别为结构化条件的词 (避免 "python 北京" 中 VSM 也匹配 "北京")
+        struct_words = _extract_struct_words(merged_filters)
+        if struct_words:
+            query_terms = [t for t in query_terms if t not in struct_words]
+
+        # 2. 全量 VSM (5000 篇稀疏矩阵乘法 ~2ms)
         candidate_ids = set(range(self.N))
 
         # 3. 结构化过滤
@@ -444,8 +465,9 @@ class SearchEngine:
             # 无查询词 → 给所有候选文档相同得分
             scores = np.ones(self.N)
 
-        # 5. 提取候选文档得分
-        doc_scores = [(doc_id, float(scores[doc_id])) for doc_id in candidate_ids]
+        # 5. 提取候选文档得分, 剔除得分为0的文档 (不含任何查询词)
+        doc_scores = [(doc_id, float(scores[doc_id])) for doc_id in candidate_ids
+                      if scores[doc_id] > 0.0001 or not query_terms]
 
         # 6. 排序
         doc_scores = self.sort_results(doc_scores, sort_by)
