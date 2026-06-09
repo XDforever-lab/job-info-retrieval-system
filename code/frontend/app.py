@@ -18,6 +18,11 @@ app.config['SECRET_KEY'] = 'recruit-search-system-2026'
 print("=" * 50)
 print("系统启动中...")
 _engine = SearchEngine()
+
+# 加载城市坐标数据
+_city_coords_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'city_coords.json')
+with open(_city_coords_path, 'r', encoding='utf-8') as f:
+    _city_coords = json.load(f)
 _engine.load()
 print(f"系统就绪, {_engine.N} 条文档可用")
 print("=" * 50)
@@ -261,6 +266,12 @@ def cluster_img(filename):
     return send_from_directory(cluster_dir, filename)
 
 
+@app.route('/map')
+def map_view():
+    """全国招聘城市分布地图"""
+    return render_template('map.html')
+
+
 @app.route('/about')
 def about():
     """关于页"""
@@ -367,6 +378,23 @@ def api_stats():
         'total_cities': _engine.df['工作城市'].nunique(),
         'total_companies': _engine.df['企业名称'].nunique(),
     })
+
+
+@app.route('/api/map_data')
+def api_map_data():
+    """全国城市岗位分布数据 API —— 返回城市名 + 经纬度 + 岗位数"""
+    city_counts = _engine.df['工作城市'].value_counts().to_dict()
+    result = []
+    for name, count in city_counts.items():
+        coord = _city_coords.get(name)
+        if coord:
+            result.append({
+                'name': name,
+                'lng': coord[0],
+                'lat': coord[1],
+                'count': int(count)
+            })
+    return jsonify(result)
 
 
 # ══════════════════════════════════════════════════

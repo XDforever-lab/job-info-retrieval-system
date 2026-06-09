@@ -1173,6 +1173,36 @@ a:hover { color: var(--accent); }
   font-style: italic;
 }
 
+/* ── 城市地图大头针链接 ── */
+.map-pin-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--text-sub);
+  border-radius: 2px;
+  transition: color 0.2s;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.map-pin-link:hover {
+  color: var(--accent);
+}
+
+/* 标签内嵌地图图标 */
+.map-pin-inline {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 2px;
+  color: var(--text-sub);
+  transition: color 0.2s;
+  line-height: 1;
+}
+.map-pin-inline:hover {
+  color: var(--accent);
+}
+
 /* === Responsive === */
 @media (max-width: 768px) {
   .nav-container { padding: 0 24px; height: 52px; }

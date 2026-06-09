@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}全国招聘城市分布{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+{% endblock %}
+{% block content %}
+
+<section class="section">
+  <h2 class="section-title">全国招聘城市分布</h2>
+  <p style="text-align:center; color: var(--text-sub); margin-bottom: 2rem;">
+    圆点越大，岗位数量越多 &middot; 基于 A 股上市公司招聘数据
+  </p>
+</section>
+
+<div id="china-map" style="width: 100%; max-width: 1200px; margin: 0 auto; height: 620px;"></div>
+
+<p style="text-align:center; color: var(--text-sub); font-size: 11px; margin-top: 1.5rem; letter-spacing: 0.03em;">
+  &#x2714; 本地图采用国家测绘地理信息局发布的标准中国地图底图数据，符合国家相关规范
+</p>
+
+{% endblock %}
+{% block scripts %}
+<script>
+(function() {
+  var mapDom = document.getElementById('china-map');
+  if (!mapDom) return;
+  var chart = echarts.init(mapDom);
+
+  fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+    .then(function(r) { return r.json(); })
+    .then(function(geoJson) {
+      echarts.registerMap('china', geoJson);
+      return fetch('/api/map_data');
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(cities) {
+      var maxCount = Math.max.apply(null, cities.map(function(c) { return c.count; }));
+      var minCount = Math.min.apply(null, cities.map(function(c) { return c.count; }));
+
+      chart.setOption({
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: '#f9f8f5',
+          borderColor: '#e2ded7',
+          borderWidth: 1,
+          textStyle: { color: '#1a1817', fontFamily: 'Georgia, "Noto Serif SC", "Songti SC", serif' },
+          formatter: function(p) {
+            return '<strong>' + p.name + '</strong><br/>岗位数：' + p.value[2] + ' 个<br/><span style="color:#8a8782;font-size:11px;">点击跳转检索</span>';
+          }
+        },
+        geo: {
+          map: 'china',
+          roam: true,
+          zoom: 1.2,
+          center: [104.5, 36],
+          itemStyle: { areaColor: '#f3efe7', borderColor: '#d5cfc5', borderWidth: 0.7 },
+          emphasis: { disabled: true },
+          label: { show: false }
+        },
+        series: [{
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          data: cities.map(function(c) { return { name: c.name, value: [c.lng, c.lat, c.count] }; }),
+          symbolSize: function(val) {
+            return Math.max(4, 4 + (val[2] - minCount) / Math.max(maxCount - minCount, 1) * 28);
+          },
+          itemStyle: {
+            color: '#b8956a',
+            borderColor: '#8c6f4f',
+            borderWidth: 0.5,
+            shadowBlur: 4,
+            shadowColor: 'rgba(0,0,0,0.08)'
+          },
+          emphasis: {
+            itemStyle: { color: '#8c6f4f', borderColor: '#6b5440', borderWidth: 1.5, shadowBlur: 8 },
+            scale: 1.4
+          },
+          encode: { value: 2 },
+          label: { show: false }
+        }]
+      });
+
+      // 点击城市 → 跳转搜索页
+      chart.on('click', function(params) {
+        if (params.seriesType === 'scatter' && params.name) {
+          window.location.href = '/search?city=' + encodeURIComponent(params.name);
+        }
+      });
+    })
+    .catch(function(err) {
+      console.error(err);
+      mapDom.innerHTML = '<p style="text-align:center;padding:4rem;color:var(--text-sub);">地图加载失败，请检查网络连接后刷新重试</p>';
+    });
+
+  window.addEventListener('resize', function() { chart.resize(); });
+})();
+</script>
+{% endblock %}
