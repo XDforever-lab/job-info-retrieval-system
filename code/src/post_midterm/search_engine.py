@@ -99,6 +99,15 @@ class SearchEngine:
         self.term_to_col = {term: i for i, term in enumerate(self.feature_names)}  # 词→列号映射
         self.idf = vm['df']                            # 词→DF
 
+        # 预计算每个文档的 L2 范数 (用于正确的余弦相似度)
+        print("[SearchEngine] 计算文档 L2 范数...")
+        self.doc_norms = np.zeros(self.N)
+        for i in range(self.N):
+            row = self.tfidf_matrix[i]
+            self.doc_norms[i] = np.sqrt(row.power(2).sum())
+        # 避免除零: 范数为0的文档(纯停用词)给一个极小范数
+        self.doc_norms[self.doc_norms < 1e-9] = 1.0
+
         # 4. 停用词
         print("[SearchEngine] 加载停用词...")
         with open(STOPWORDS_FILE, 'r', encoding='utf-8') as f:
@@ -186,11 +195,13 @@ class SearchEngine:
         return csr_matrix(vec)
 
     def compute_cosine(self, query_vec):
-        """#193: 查询向量 × TF-IDF 矩阵 → 余弦相似度得分数组"""
-        # tfidf_matrix 已 L2 归一化, query_vec 已归一化
-        # 点积 = 余弦相似度
-        scores = self.tfidf_matrix.dot(query_vec.T).toarray().flatten()
-        return scores
+        """#193: 查询向量 × TF-IDF 矩阵 → 余弦相似度得分数组 (0~1)
+
+        正确公式: cos(d,q) = (d·q) / (|d| × |q|)
+        query_vec 已 L2 归一化 (|q|=1), 故只需除以文档范数 |d|
+        """
+        raw = self.tfidf_matrix.dot(query_vec.T).toarray().flatten()
+        return raw / self.doc_norms
 
     # ══════════════════════════════════════════════════════
     # 9.2 多字段联合检索 (#194-#197)
@@ -327,9 +338,14 @@ class SearchEngine:
     # ══════════════════════════════════════════════════════
 
     def sort_results(self, doc_scores, sort_by='relevance'):
-        """#200: 四种排序方式"""
+        """#200: 四种排序方式。相关度排序时, 得分相同则按发布日期降序打破平局"""
         if sort_by == 'relevance':
-            return sorted(doc_scores, key=lambda x: -x[1])  # 得分降序
+            def _key(item):
+                doc_id, score = item
+                # 主键: 得分降序; 副键: 日期降序 (新发布优先)
+                date_str = str(self.df.iloc[doc_id].get('招聘发布日期', ''))
+                return (-score, date_str)
+            return sorted(doc_scores, key=_key)
 
         doc_ids = [d for d, _ in doc_scores]
 
@@ -466,10 +482,14 @@ class SearchEngine:
             scores = np.ones(self.N)
 
         # 5. 提取候选文档得分, 剔除得分为0的文档 (不含任何查询词)
-        doc_scores = [(doc_id, float(scores[doc_id])) for doc_id in candidate_ids
-                      if scores[doc_id] > 0.0001 or not query_terms]
+        #    归一化到 0~100, title_boost 可让高分略超 100
+        doc_scores = []
+        for doc_id in candidate_ids:
+            s = float(scores[doc_id])
+            if s > 0.0001 or not query_terms:
+                doc_scores.append((doc_id, round(s * 50, 2)))  # ×50 使 0~2 映射到 0~100
 
-        # 6. 排序
+        # 6. 排序 (含日期打破平局)
         doc_scores = self.sort_results(doc_scores, sort_by)
 
         # 7. 分页
