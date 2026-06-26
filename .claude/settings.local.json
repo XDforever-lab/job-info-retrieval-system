@@ -9,7 +9,8 @@
       "Bash(iconv -f utf-8 -t utf-8)",
       "Bash(python src/post_midterm/indexer.py)",
       "Bash(python src/post_midterm/search_engine.py)",
-      "Bash(python src/post_midterm/evaluator.py)"
+      "Bash(python src/post_midterm/evaluator.py)",
+      "Bash(pip install *)"
     ]
   }
 }
