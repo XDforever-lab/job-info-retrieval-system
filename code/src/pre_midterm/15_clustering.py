@@ -349,6 +349,15 @@ def main():
     best_k, kmeans_labels, kmeans_sil = run_kmeans_words(X)
     hier_results, hier_best = run_hierarchical_words(X, words, best_k)
 
+    # ── 保存所有聚类方法的标签 ──
+    all_labels = {"K-Means": kmeans_labels.tolist()}
+    for name in ["Ward", "Single", "Complete"]:
+        all_labels[name] = hier_results[name]["labels"].tolist()
+    all_labels["best_k"] = best_k
+    all_labels["words"] = words
+    with open(os.path.join(OUT_DIR, "cluster_labels.json"), "w", encoding="utf-8") as f:
+        json.dump(all_labels, f, ensure_ascii=False)
+
     # 用轮廓系数更高的
     hier_sil = hier_results[hier_best]["silhouette"]
     if hier_sil > kmeans_sil:

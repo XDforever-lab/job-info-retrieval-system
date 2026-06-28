@@ -1,0 +1,29 @@
+{
+  "K": 10,
+  "methods": {
+    "K-Means": {
+      "purity": 0.2737,
+      "entropy": 3.9422
+    },
+    "Ward": {
+      "purity": 0.2712,
+      "entropy": 3.955
+    },
+    "Single": {
+      "purity": 0.1913,
+      "entropy": 4.9413
+    },
+    "Complete": {
+      "purity": 0.2488,
+      "entropy": 4.5389
+    }
+  },
+  "overlap": {
+    "K-Means vs Ward": 0.7946,
+    "K-Means vs Single": 0.2284,
+    "K-Means vs Complete": 0.4244,
+    "Ward vs Single": 0.2072,
+    "Ward vs Complete": 0.3983,
+    "Single vs Complete": 0.7005
+  }
+}
